@@ -10,6 +10,7 @@
                  [jumblerg/ring.middleware.cors "1.0.1"]
                  [compojure "1.3.1"]
                  [hiccup "1.0.5"]
+                 [enlive "1.1.5"]
                  [crypto-password "0.1.3"]
                  [com.cemerick/friend "0.2.1"]
                  ;; Database dependencies

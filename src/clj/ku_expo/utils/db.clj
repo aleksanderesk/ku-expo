@@ -11,32 +11,23 @@
          :user (env :db-user)
          :password (env :db-pass)})
 
-(defquery select-teacher "sql/select-teacher.sql")
-(defquery register-teacher! "sql/insert-teacher.sql")
+(defquery select-user "sql/select-user.sql")
+(defquery register-user! "sql/insert-user.sql")
 
 (defn user-exists?
-  "Determine if a given teacher is already registered"
+  "Determine if a given user is already registered"
   [email]
-  (if (seq (select-teacher db email))
+  (if (seq (select-user db email))
     true
     false))
 
-(defn get-teacher
-  "Returns a map of the teacher data."
+(defn get-user
+  "Returns a map of the user data"
   [email]
-  (first (select-teacher db email))) ; because emails are unique, we safely return the head of the result list
+  (let [result (first (select-user db email))]
+    (update-in result [:roles] read-string)))
 
-(defn register-teacher
-  [full-name email phone-number password]
-  (let [salt (random/base64 8)
-        password-hash (pass/encrypt (str password salt))]
-    (register-teacher! db full-name email phone-number password-hash salt)))
-
-(defn successful-login?
-  [email password]
-  (let [profile (get-teacher email)
-        password-hash (:password profile)
-        salt (:salt profile)]
-    (if (pass/check (str password salt) password-hash)
-      true
-      false)))
+(defn register-user
+  [fullname username phone-number password roles]
+  (let [password-hash (pass/encrypt password )]
+    (register-user! db fullname username phone-number password-hash roles)))
