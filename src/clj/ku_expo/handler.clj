@@ -15,7 +15,12 @@
             [ring.middleware.cors :as cors]
             [ku-expo.auth :as auth]
             [ku-expo.teachers.manage :as teacher]
+            [ku-expo.admins.manage :as admin]
             [ku-expo.utils.db :as db]))
+
+(derive ::admin ::user)
+(derive ::teacher ::user)
+(derive ::group ::user)
 
 (defroutes teacher-routes
   (GET "/" request (teacher/manage-teacher request))
@@ -32,7 +37,10 @@
   (DELETE "/students" request (teacher/delete-student request))
 
   (GET "/teams" request (teacher/get-teams request))
+  (GET "/teams-table" request (teacher/get-teams-table request))
   (PUT "/teams" request (teacher/create-team request))
+  (POST "/teams" request (teacher/update-team request))
+  (DELETE "/teams" request (teacher/delete-team request))
   
   (GET "/logistics" request (teacher/get-logistics request))
   (PUT "/logistics" request (teacher/create-logistics request))
@@ -45,6 +53,10 @@
 (defroutes admin-routes
   (GET "/" request (response "This page can only be seen by admins.")))
 
+(defroutes api-routes
+  (GET "/competitions" request (admin/get-competitions))
+  )
+
 (defroutes app-routes
   (route/resources "/")
   (context "/teacher" request 
@@ -53,6 +65,8 @@
            (friend/wrap-authorize group-routes #{::group}))
   (context "/admin" request
            (friend/wrap-authorize admin-routes #{::admin}))
+  (context "/api" request
+           (friend/wrap-authorize api-routes #{::user}))
 
   (GET "/" [] (resource-response "index.html" {:root "public/html"}))
   (GET "/login" [] (auth/login))

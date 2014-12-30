@@ -393,13 +393,14 @@
                                 </div>
                                 <!-- Table -->
                                 <div class="panel-body">
-                                    <table id="teams-table" data-toggle="table" data-url="/teacher/teams" data-card-view="true" data-cache="false">
+                                    <table id="teams-table" data-toggle="table" data-url="/teacher/teams-table" data-card-view="true" data-cache="false">
                                         <thead>
                                             <tr>
                                                 <th data-field="id" data-visible="false">ID</th>
                                                 <th data-field="name">Team Name</th>
                                                 <th data-field="division">Division</th>
-                                                <th data-field="students">Students</th>
+                                                <th data-field="student_names">Students</th>
+                                                <th data-field="comp_names">Competitions</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -413,18 +414,30 @@
                                                         division: row.division
                                                     },
                                                     success: function(result) {
-                                                        $('#update-students option').remove();
+                                                        $('#update-team-students option').remove();
                                                         $.each(result, function() {
-                                                            $('#update-students').append($("<option/>", {
+                                                            $('#update-team-students').append($("<option/>", {
                                                                 value: this.id,
                                                                 text: this.name
                                                             }));
                                                         });
-                                                        $('#update-students').bootstrapDualListbox('refresh');
+                                                        $('#update-team-students').bootstrapDualListbox('refresh');
                                                     }
                                                 });
-                                                
-
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/api/competitions',
+                                                    success: function(result) {
+                                                        $('#update-team-competitions option').remove();
+                                                        $.each(result, function() {
+                                                            $('#update-team-competitions').append($("<option/>", {
+                                                                value: this.id,
+                                                                text: this.name
+                                                            }));
+                                                        });
+                                                        $('#update-team-competitions').bootstrapDualListbox('refresh');
+                                                    }
+                                                });
                                                 $('#team-id').val(row.id);
                                                 $('#update-team-name').val(row.name);
                                                 $('#update-team-division').val(row.division);
@@ -504,7 +517,7 @@
                                                         <label class="control-label">Team Name</label>
                                                         <input id="update-team-name" type="text" class="form-control" name="name" />
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group hidden" aria-hidden="true">
                                                         <label class="control-label">Division</label>
                                                         <select id="update-team-division" class="form-control">
                                                             <option>Elementary School</option>
@@ -514,13 +527,26 @@
                                                     </div>
                                                     <hr>
                                                     <div class="form-group">
-                                                        <select id="update-students" multiple="multiple" style="display: none;">
+                                                        <select id="update-team-students" multiple="multiple" style="display: none;">
                                                         </select>
+                                                        <span class="help-block">Select the students to include in this team by clicking on their names in the left-hand list above. You may remove a student from the team by clicking on their name in the righthand list.</span>
                                                     </div>
                                                     <script type="text/javascript">
-                                                        var updateStudents = $('#update-students').bootstrapDualListbox({
+                                                        var updateStudents = $('#update-team-students').bootstrapDualListbox({
                                                                 nonSelectedListLabel: 'Students List',
                                                                 selectedListLabel: 'Team Members'
+                                                        });
+                                                    </script>
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <select id="update-team-competitions" multiple="multiple" style="display: none;">
+                                                        </select>
+                                                        <span class="help-block">Select the competitions to enroll this team in by clicking on their names in the left-hand list above. You may un-enroll the team from competitions by clicking on the competition name in righthand list.</span>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                        var updateStudents = $('#update-team-competitions').bootstrapDualListbox({
+                                                                nonSelectedListLabel: 'Competitions List',
+                                                                selectedListLabel: 'Selected Competitions'
                                                         });
                                                     </script>
                                                     <div class="form-group">
@@ -542,22 +568,30 @@
                                                                         id: $('#team-id').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        console.log(result);
                                                                         $('#teams-table').bootstrapTable('refresh');
                                                                         $('#updateTeam').modal('toggle');
                                                                     }
                                                             });
                                                         }
-
                                                         function postTeam() {
+                                                            console.log($('#team-id').val());
+                                                            console.log($('#update-team-name').val());
+                                                            console.log($('#update-team-division').val());
+                                                            console.log($('#update-team-students').val());
+                                                            console.log($('#update-team-competitions').val());
                                                             $.ajax({
                                                                     url: '/teacher/teams',
                                                                     type: 'POST',
                                                                     data: {
                                                                         id: $('#team-id').val(),
                                                                         name: $('#update-team-name').val(),
-                                                                        division: $('#update-team-division').val()
+                                                                        division: $('#update-team-division').val(),
+                                                                        students: $('#update-team-students').val(),
+                                                                        competitions: $('#update-team-competitions').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        console.log(result);
                                                                         $('#teams-table').bootstrapTable('refresh');
                                                                         $('#updateTeam').modal('toggle');
                                                                     }
@@ -610,7 +644,6 @@
                                     <script>
                                         $(function() {
                                             $('#logistics-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
-                                                console.log(row);
                                                 $('#logistics-id').val(row.id);
                                                 $('#update-logistics-num-cars').val(row.num_cars);
                                                 $('#update-logistics-num-buses').val(row.num_buses);
@@ -725,12 +758,10 @@
                                                             if ($('#new-logistics-attend-opening').prop('checked')) {
                                                                 new_attend_opening = 1;
                                                             }
-
                                                             var new_leave_early = 0;
                                                             if ($('#new-logistics-leave-early').prop('checked')) {
                                                                 new_leave_early = 1;
                                                             }
-
                                                             $.ajax({
                                                                     url: '/teacher/logistics',
                                                                     type: 'PUT',
@@ -861,18 +892,15 @@
                                                                     }
                                                             });
                                                         }
-
                                                         function postLogistics() {
                                                             var update_attend_opening = 0;
                                                             if ($('#update-logistics-attend-opening').prop('checked')) {
                                                                 update_attend_opening = 1;
                                                             }
-
                                                             var update_leave_early = 0;
                                                             if ($('#update-logistics-leave-early').prop('checked')) {
                                                                 update_leave_early = 1;
                                                             }
-
                                                             $.ajax({
                                                                     url: '/teacher/logistics',
                                                                     type: 'POST',

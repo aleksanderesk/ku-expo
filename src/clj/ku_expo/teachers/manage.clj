@@ -106,6 +106,12 @@
         user-id (get-in session [:authentications (session :current) :id])]
     (json-response (db/get-teams user-id))))
 
+(defn get-teams-table
+  [req]
+  (let [session (friend/identity req)
+        user-id (get-in session [:authentications (session :current) :id])]
+    (json-response (db/get-teams-table user-id))))
+
 (defn create-team
   [req]
   (let [session (friend/identity req)
@@ -114,6 +120,28 @@
     (do 
       (db/create-team user-id name division)
       (json-response {:result "success"}))))
+
+;; BUG: update with empty list produces no change on existing rows
+(defn update-team
+  [req]
+  (let [session (friend/identity req)
+        user-id (get-in session [:authentications (session :current) :id])
+        {:keys [id name division]} (:params req)
+        students (get-in req [:params :students])
+        competitions (get-in req [:params :competitions])]
+    (json-response {:result [(db/update-team name division id user-id)
+                             (db/update-students-to-team id students)
+                             (db/update-competitions-to-team id competitions)]})))
+
+(defn delete-team
+  [req]
+  (let [session (friend/identity req)
+        user-id (get-in session [:authentications (session :current) :id])
+        {:keys [id]} (:params req)]
+    (json-response {:result [(db/delete-team id user-id)
+                             (db/delete-students-to-team id)
+                             (db/delete-competitions-to-team id)]})))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

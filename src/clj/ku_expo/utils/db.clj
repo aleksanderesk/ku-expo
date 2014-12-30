@@ -25,13 +25,24 @@
 (defquery update-student! "sql/update-student.sql")
 (defquery delete-student! "sql/delete-student.sql")
 
+(defquery create-student-to-team! "sql/insert-student-to-team.sql")
+(defquery delete-students-to-team! "sql/delete-students-to-team.sql")
+
+(defquery create-competition-to-team! "sql/insert-competition-to-team.sql")
+(defquery delete-competitions-to-team! "sql/delete-competitions-to-team.sql")
+
 (defquery select-teams "sql/select-teams.sql")
+(defquery select-teams-table "sql/select-teams-table.sql")
 (defquery create-team! "sql/insert-team.sql")
+(defquery update-team! "sql/update-team.sql")
+(defquery delete-team! "sql/delete-team.sql")
 
 (defquery select-logistics "sql/select-logistics.sql")
 (defquery create-logistics! "sql/insert-logistics.sql")
 (defquery update-logistics! "sql/update-logistics.sql")
 (defquery delete-logistics! "sql/delete-logistics.sql")
+
+(defquery select-competitions "sql/select-competitions.sql")
 
 (defn user-exists?
   "Determine if a given user is already registered"
@@ -110,9 +121,96 @@
   [user-id]
   (select-teams db user-id))
 
+(defn- get-grouped-entries
+  [user-id]
+  (->> user-id
+      (select-teams-table db)
+      (group-by #(:id %))
+      vals))
+
+(defn- collapse-rows
+  [rows]
+  (let [collapsed-rows (reduce (fn [coll row] 
+            (let [{:keys [id name division student_id comp_id student_name comp_name]} row 
+                  {:keys [student_ids comp_ids student_names comp_names]} coll] 
+              (-> coll 
+                  (assoc :id id) 
+                  (assoc :name name) 
+                  (assoc :division division) 
+                  (assoc :student_ids 
+                         (conj student_ids student_id))
+                  (assoc :comp_ids
+                         (conj comp_ids comp_id))
+                  (assoc :student_names
+                         (conj student_names student_name))
+                  (assoc :comp_names
+                         (conj comp_names comp_name)))))
+          {:id nil :name nil :division nil :student_ids #{} :comp_ids #{} :student_names #{} :comp_names #{}}
+          rows)
+        {:keys [student_ids comp_ids student_names comp_names]} collapsed-rows]
+    (-> collapsed-rows
+        (assoc :student_ids (clojure.string/join ", " student_ids))
+        (assoc :comp_ids (clojure.string/join ", " comp_ids))
+        (assoc :student_names (clojure.string/join ", " student_names))
+        (assoc :comp_names (clojure.string/join ", " comp_names)))))
+
+(defn get-teams-table
+  [user-id]
+  (map collapse-rows (get-grouped-entries user-id)))
+
 (defn create-team
   [user-id name division]
   (create-team! db user-id name division))
+
+(defn update-team
+  [name division team-id user-id]
+  (update-team! db name division team-id user-id))
+
+(defn delete-team
+  [team-id user-id]
+  (delete-team! db team-id user-id))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Student-to-Team Operations
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn create-student-to-team
+  [student-id team-id]
+  (create-student-to-team! db student-id team-id)) ; create a single new record
+
+(defn delete-students-to-team
+  [team-id]
+  (delete-students-to-team! db team-id)) ; delete a single old record
+
+(defn update-students-to-team
+  [team-id students]
+  (do
+    (delete-students-to-team team-id) ; delete old records
+    (for [student-id students]
+      (create-student-to-team student-id team-id)))) ; create new records reflecting update
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Competition-to-Team Operations
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn create-competition-to-team
+  [competition-id team-id]
+  (create-competition-to-team! db competition-id team-id)) ; create a single new record
+
+(defn delete-competitions-to-team
+  [team-id]
+  (delete-competitions-to-team! db team-id)) ; delete a single old record
+
+(defn update-competitions-to-team
+  [team-id competitions]
+  (do
+    (delete-competitions-to-team team-id) ; delete old records
+    (for [competition-id competitions]
+      (create-competition-to-team competition-id team-id)))) ; create new records reflecting update
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -150,3 +248,13 @@
 (defn delete-logistics
   [logistics-id user-id]
   (delete-logistics! db logistics-id user-id))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Competition Operations
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn get-competitions
+  []
+  (select-competitions db))
