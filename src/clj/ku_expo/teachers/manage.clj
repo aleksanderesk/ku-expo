@@ -121,7 +121,6 @@
       (db/create-team user-id name division)
       (json-response {:result "success"}))))
 
-;; BUG: update with empty list produces no change on existing rows
 (defn update-team
   [req]
   (let [session (friend/identity req)

@@ -8,6 +8,7 @@
         <link href="/css/bootstrap-table.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-duallistbox.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap-callouts.min.css" rel="stylesheet" type="text/css">
         <script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap-table.min.js" type="text/javascript"></script>
@@ -42,6 +43,9 @@
         <div class="container">
             <ul class="nav nav-tabs" id="operationTabs" role="tablist" style="margin-bottom: 15px;">
                 <li class="active">
+                    <a data-toggle="tab" href="#general">General</a>
+                </li>
+                <li>
                     <a data-toggle="tab" href="#school">School</a>
                 </li>
                 <li>
@@ -54,10 +58,32 @@
                     <a data-toggle="tab" href="#logistics">Logistics</a>
                 </li>
             </ul>
+            <!-- General Tab -->
             <div class="tab-content" id="content">
-                <!-- School Tab -->
-                <div class="tab-pane fade active in" id="school" role="tabpanel">
+                <div class="tab-pane fade active in" id="general" role="tabpanel">
                     <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>General Instructions</h4>
+                                <p>Welcome to the Expo Teacher Registration Application! Registration consists of four components, <span class="text-primary">School</span>, <span class="text-primary">Students</span>, <span class="text-primary">Teams</span>, and <span class="text-primary">Logistics</span>. Please register the components in order by selecting tabs above.</p>
+                                <p>After having registered your components, you will be able to edit them at any time by returning to this application.</p>
+                                <p>Please note however, in order to prepare for competitions and scheduling, we will be <b>closing</b> registration two days before the first day of Expo. You will still be able to view your registered information from this application, but when registration is closed, you will not be able to edit it. So please finalize your students and teams by <b>February 17</b>. If changes occur in your teams after registration has closed, you may either email the Expo administrators with your changes, or you may bring your changes with you on the days of Expo you attend for Expo administrators to make during morning registration.</p>
+                                <p>If you have any questions concerning your registration or Expo in general, email <a href="mailto:tomasgreen@ku.edu">tomasgreen@ku.edu</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- School Tab -->
+                <div class="tab-pane fade" id="school" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>School Instructions</h4>
+                                <p>Register your school below by clicking the <span class="text-primary">'Add School'</span> button in the Overview header below. Once you have provided the full name and address of your school, it will appear as a row in the Overview table for you to verify.</p>
+                                <p>Clicking on the row will open a dialog to edit the school's information or remove the record entirely if necessary.</p> 
+                                <p>If you will sponsor multiple schools (e.g. your district's Elementary School <i>and</i> Middle School), you may register each separately.</p>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -131,6 +157,7 @@
                                                                         $('#newSchool').modal('toggle');
                                                                     }
                                                             });
+                                                            $("#newSchoolForm").trigger('reset');
                                                         }
                                                     </script>
                                                 </form>
@@ -216,6 +243,13 @@
                 <div class="tab-pane fade" id="students" role="tabpanel">
                     <div class="container-fluid">
                         <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Students Instructions</h4>
+                                <p>Register your students below by clicking the <span class="text-primary">'Add Student'</span> button in the Overview header below for each student. Once you have provided the student's full name and school division (i.e. Elementary, Middle, High School), they will appear as a row in the Overview table for you to verify.</p>
+                                <p>Clicking on the row will open a dialog to edit the student's information or remove the record entirely if necessary.</p> 
+                            </div>
+                        </div>
+                        <div class="row">
                              <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
@@ -292,6 +326,7 @@
                                                                         $('#newStudent').modal('toggle');
                                                                     }
                                                             });
+                                                            $("#newStudentForm").trigger('reset');
                                                         }
                                                     </script>
                                                 </form>
@@ -381,6 +416,14 @@
                 <div class="tab-pane fade" id="teams" role="tabpanel">
                     <div class="container-fluid">
                         <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Teams Instructions</h4>
+                                <p>Register your teams' names and divisions first by clicking the <span class="text-primary">'Add Team'</span> button in the Overview header below for each team. Once you have provided the teams's name and school division (i.e. Elementary, Middle, High School), they will appear as a row in the Overview table for you to verify.</p>
+                                <p>To register your students to a team, and to register a team to its competitions, click on the team's row. In the resultant dialogue, you may select your students and competitions. Using this dialogue, you may also update the name, student membership, and registered competitions of the team whenever needed, or you may delete the record entirely if necessary.</p>
+                                <p><span class="text-warning">Note: </span>Only students registered with the same division as the team will appear in the student selection lists. If you mislabeled the division of your team, delete the record by clicking on it's row and clicking the <span class="text-danger">'Delete'</span> button in the resulting dialogue, then remake the team with the correct division through the <span class="text-primary">'Add Team'</span> dialogue.</p>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
@@ -407,6 +450,9 @@
                                     <script>
                                         $(function() {
                                             $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
+                                                console.log(row);
+                                                var students = row.student_ids.split(', ');
+                                                var competitions = row.comp_ids.split(', ');
                                                 $.ajax({
                                                     dataType: 'json',
                                                     url: '/teacher/students-division',
@@ -416,10 +462,18 @@
                                                     success: function(result) {
                                                         $('#update-team-students option').remove();
                                                         $.each(result, function() {
-                                                            $('#update-team-students').append($("<option/>", {
-                                                                value: this.id,
-                                                                text: this.name
-                                                            }));
+                                                            if(($.inArray(String(this.id), students)) > -1) {
+                                                                $('#update-team-students').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-students').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
                                                         });
                                                         $('#update-team-students').bootstrapDualListbox('refresh');
                                                     }
@@ -430,10 +484,18 @@
                                                     success: function(result) {
                                                         $('#update-team-competitions option').remove();
                                                         $.each(result, function() {
-                                                            $('#update-team-competitions').append($("<option/>", {
-                                                                value: this.id,
-                                                                text: this.name
-                                                            }));
+                                                            if(($.inArray(String(this.id), competitions)) > -1) {
+                                                                $('#update-team-competitions').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-competitions').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
                                                         });
                                                         $('#update-team-competitions').bootstrapDualListbox('refresh');
                                                     }
@@ -486,10 +548,12 @@
                                                                         division: $('#new-team-division').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        console.log(result);
                                                                         $('#teams-table').bootstrapTable('refresh');
                                                                         $('#newTeam').modal('toggle');
                                                                     }
                                                             });
+                                                            $("#newTeamForm").trigger('reset');
                                                         }
                                                     </script>
                                                 </form>
@@ -529,7 +593,7 @@
                                                     <div class="form-group">
                                                         <select id="update-team-students" multiple="multiple" style="display: none;">
                                                         </select>
-                                                        <span class="help-block">Select the students to include in this team by clicking on their names in the left-hand list above. You may remove a student from the team by clicking on their name in the righthand list.</span>
+                                                        <span class="help-block">Select the students to include in this team by clicking on their names in the left-hand list above. You may remove a student from the team by clicking on their name in the right-hand list.</span>
                                                     </div>
                                                     <script type="text/javascript">
                                                         var updateStudents = $('#update-team-students').bootstrapDualListbox({
@@ -541,7 +605,7 @@
                                                     <div class="form-group">
                                                         <select id="update-team-competitions" multiple="multiple" style="display: none;">
                                                         </select>
-                                                        <span class="help-block">Select the competitions to enroll this team in by clicking on their names in the left-hand list above. You may un-enroll the team from competitions by clicking on the competition name in righthand list.</span>
+                                                        <span class="help-block">Select the competitions to enroll this team in by clicking on their names in the left-hand list above. You may un-enroll the team from competitions by clicking on the competition name in right-hand list.</span>
                                                     </div>
                                                     <script type="text/javascript">
                                                         var updateStudents = $('#update-team-competitions').bootstrapDualListbox({
@@ -610,6 +674,13 @@
                 <!-- Logistics Tab -->
                 <div class="tab-pane fade" id="logistics" role="tabpanel">
                     <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Logistics Instructions</h4>
+                                <p>Logistics information will allow Expo's administrators to prepare for parking and attendance day-of the event. Please register the required Logistics information by clicking the <span class="text-primary">'Add Logistics'</span> button in the Overview header below. Once you have provided the information, it will appear as a row in the Overview table for you to verify.</p>
+                                <p>Clicking on the row will open a dialog to edit the Logistics information or remove the record entirely if necessary.</p>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -783,6 +854,7 @@
                                                                         $('#newLogistics').modal('toggle');
                                                                     }
                                                             });
+                                                            $("#newLogisticsForm").trigger('reset');
                                                         }
                                                     </script>
                                                 </form>

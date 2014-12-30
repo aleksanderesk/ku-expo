@@ -121,14 +121,14 @@
   [user-id]
   (select-teams db user-id))
 
-(defn- get-grouped-entries
+(defn get-grouped-entries
   [user-id]
   (->> user-id
       (select-teams-table db)
       (group-by #(:id %))
       vals))
 
-(defn- collapse-rows
+(defn collapse-rows
   [rows]
   (let [collapsed-rows (reduce (fn [coll row] 
             (let [{:keys [id name division student_id comp_id student_name comp_name]} row 
