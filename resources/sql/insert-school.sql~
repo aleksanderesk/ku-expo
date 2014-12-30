@@ -1,0 +1,4 @@
+INSERT IGNORE INTO schools
+SET teacher_id = :user_id,
+    name = :name,
+    address = :address;

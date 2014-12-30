@@ -8,9 +8,8 @@
                  [ring "1.3.2"]
                  [ring/ring-json "0.3.1"]
                  [jumblerg/ring.middleware.cors "1.0.1"]
+                 [ring-json-response "0.2.0"]
                  [compojure "1.3.1"]
-                 [hiccup "1.0.5"]
-                 [enlive "1.1.5"]
                  [crypto-password "0.1.3"]
                  [com.cemerick/friend "0.2.1"]
                  ;; Database dependencies
@@ -19,8 +18,9 @@
                  [yesql "0.4.0"]
                  ;; Clojurescript dependencies
                  [org.clojure/clojurescript "0.0-2411"]
-                 [cljs-ajax "0.1.5"]
+                 [cljs-ajax "0.3.3"]
                  [formative "0.8.8"]
+                 [prismatic/dommy "0.1.1"]
                  ;; Build dependencies
                  [clj-time "0.8.0"]
                  [environ "1.0.0"]]

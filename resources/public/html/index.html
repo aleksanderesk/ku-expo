@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>KU Expo</title>
+        <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+        <script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">KU Expo</a>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="http://localhost:3000/teacher">Teacher</a>
+                        </li>
+                        <li>
+                            <a href="http://localhost:3000/group">Student Group</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <button class="btn btn-default navbar-btn" type="button">
+                                <a href="http://localhost:3000/logout">Sign Off</a>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="jumbotron">
+                <div class="row">
+                    <h2>Welcome to Expo!</h2>
+                    <p>This service provides registration for all faculty attending the KU Engineering Expo.</p>
+                    <p>You may create a new account to register your school, students, teams, and logistics information by following the link below</p>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2 col-xs-offset-5">
+                        <a class="btn btn-primary btn-block" href="http://localhost:3000/register">Register</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <p>You may also log back in and manage your attendance information through the login page</p>
+                </div>
+                <div class="row">
+                    <div class="col-xs-2 col-xs-offset-5">
+                        <a class="btn btn-primary btn-block" href="http://localhost:3000/login">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
