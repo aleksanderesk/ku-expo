@@ -8,6 +8,13 @@
   [req]
   (resource-response "teacher.html" {:root "public/html"}))
 
+(defn get-profile
+  [req]
+  (let [session (friend/identity req)
+        user-id (get-in session [:authentications (session :current) :id])]
+    (json-response 
+      (db/get-teacher-profile user-id))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; School Operations
@@ -141,7 +148,15 @@
                              (db/delete-students-to-team id)
                              (db/delete-competitions-to-team id)]})))
 
-
+(defn teamname-valid?
+  "Checks that a given teamname is not already registered. If not, returns JSON
+  with a value of true"
+  [req]
+  (let [teamname (get-in req [:params :name])]
+    (json-response {:valid
+                    (if (= (db/teamname-exists? teamname) false)
+                      true
+                      false)})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 

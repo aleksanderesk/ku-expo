@@ -24,6 +24,8 @@
 
 (defroutes teacher-routes
   (GET "/" request (teacher/manage-teacher request))
+
+  (GET "/profile" request (teacher/get-profile request))
   
   (GET "/schools" request (teacher/get-schools request))
   (PUT "/schools" request (teacher/create-school request))
@@ -37,6 +39,7 @@
   (DELETE "/students" request (teacher/delete-student request))
 
   (GET "/teams" request (teacher/get-teams request))
+  (GET "/valid-teamname" request (teacher/teamname-valid? request))
   (GET "/teams-table" request (teacher/get-teams-table request))
   (PUT "/teams" request (teacher/create-team request))
   (POST "/teams" request (teacher/update-team request))
@@ -54,8 +57,7 @@
   (GET "/" request (response "This page can only be seen by admins.")))
 
 (defroutes api-routes
-  (GET "/competitions" request (admin/get-competitions))
-  )
+  (GET "/competitions" request (admin/get-competitions)))
 
 (defroutes app-routes
   (route/resources "/")

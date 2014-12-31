@@ -6,12 +6,14 @@
         <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-table.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrapValidator.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-duallistbox.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-callouts.min.css" rel="stylesheet" type="text/css">
         <script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap-table.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrapValidator.min.js" type="text/javascript"></script>
         <script src="/js/jquery.bootstrap-duallistbox.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
     </head>
@@ -65,10 +67,29 @@
                         <div class="row">
                             <div class="bs-callout bs-callout-info">
                                 <h4>General Instructions</h4>
-                                <p>Welcome to the Expo Teacher Registration Application! Registration consists of four components, <span class="text-primary">School</span>, <span class="text-primary">Students</span>, <span class="text-primary">Teams</span>, and <span class="text-primary">Logistics</span>. Please register the components in order by selecting tabs above.</p>
+                                <p>Welcome to the Expo Teacher Registration Application! Registration consists of four components: <span class="text-primary">School</span>, <span class="text-primary">Students</span>, <span class="text-primary">Teams</span>, and <span class="text-primary">Logistics</span>. Please register these components in order by selecting tabs above.</p>
                                 <p>After having registered your components, you will be able to edit them at any time by returning to this application.</p>
                                 <p>Please note however, in order to prepare for competitions and scheduling, we will be <b>closing</b> registration two days before the first day of Expo. You will still be able to view your registered information from this application, but when registration is closed, you will not be able to edit it. So please finalize your students and teams by <b>February 17</b>. If changes occur in your teams after registration has closed, you may either email the Expo administrators with your changes, or you may bring your changes with you on the days of Expo you attend for Expo administrators to make during morning registration.</p>
                                 <p>If you have any questions concerning your registration or Expo in general, email <a href="mailto:tomasgreen@ku.edu">tomasgreen@ku.edu</a>.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>Profile</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="profile-table" data-toggle="table" data-url="/teacher/profile" data-card-view="true" data-cache="false">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="email">Email</th>
+                                                <th data-field="phone">Phone</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,6 +182,28 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newSchoolForm').bootstrapValidator({
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'School name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                address: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Address cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -231,6 +274,28 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateSchoolForm').bootstrapValidator({
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'School name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                address: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Address cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -330,6 +395,21 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newStudentForm').bootstrapValidator({
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Student name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -404,6 +484,21 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateStudentForm').bootstrapValidator({
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Student name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -557,6 +652,25 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newTeamForm').bootstrapValidator({
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Team name cannot be empty'
+                                                                        },
+                                                                        remote: {
+                                                                            url: '/teacher/valid-teamname',
+                                                                            message: 'There is already a team registered with this name'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -663,6 +777,21 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateTeamForm').bootstrapValidator({
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Team name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -755,31 +884,31 @@
                                                 <form id="newLogisticsForm">
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Cars</label>
-                                                        <input id="new-logistics-num-cars" type="text" class="form-control" name="num-cars" />
+                                                        <input id="new-logistics-num-cars" type="text" class="form-control" name="numCars" />
                                                         <span class="help-block">How many cars (e.g. sedans, vans) will you be parking at KU campus?</span>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Buses</label>
-                                                        <input id="new-logistics-num-buses" type="text" class="form-control" name="number-buses" />
+                                                        <input id="new-logistics-num-buses" type="text" class="form-control" name="numBuses" />
                                                         <span class="help-block">How many buses will you be parking at KU campus?</span>
 
                                                     </div>
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input id="new-logistics-attend-opening" type="checkbox" name="attend-opening" /> Attending Opening
+                                                            <input id="new-logistics-attend-opening" type="checkbox" name="attendOpening" /> Attending Opening
                                                         </label>
                                                         <span class="help-block">Do you plan on attending the opening ceremonies at the KU Lied Center for the days you come?</span>
 
                                                     </div>
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input id="new-logistics-leave-early" type="checkbox" name="leave-early" /> Leaving Early
+                                                            <input id="new-logistics-leave-early" type="checkbox" name="leaveEarly" /> Leaving Early
                                                         </label>
                                                         <span class="help-block">Do you plan to leave Engineering Expo before the awards ceremonies for the days you come?</span>
                                                     </div>
                                                     <div id="new-time-field" class="input-append bootstrap-timepicker has-feedback">
                                                         <label class="control-label">Leave Time</label>
-                                                        <input id="new-logistics-leave-time" type="text" class="form-control" name="leave-time" placeholder="3:00 PM" />
+                                                        <input id="new-logistics-leave-time" type="text" class="form-control" name="leaveTime" placeholder="3:00 PM" />
                                                         <i class="glyphicon glyphicon-time form-control-feedback"></i>
                                                         <span class="help-block">What time do you plan on leaving?</span>
                                                     </div>
@@ -791,31 +920,31 @@
                                                     </script>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Lunches</label>
-                                                        <input id="new-logistics-num-lunches" type="text" class="form-control" name="num-lunches" />
+                                                        <input id="new-logistics-num-lunches" type="text" class="form-control" name="numLunches" />
                                                         <span class="help-block">How many lunches do you want to purchase? Engineering Expo can provide $3 lunches that include a hot dog, chips, and a soda.</span>
 
                                                     </div>
                                                     <hr>
-                                                    <span class="help-block">Indicate below the number of T-shirts for each size that you would like to purchase.</span>
+                                                    <p>Indicate below the number of T-shirts for each size that you would like to purchase</p>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Small Extra T-Shirts</label>
-                                                        <input id="new-logistics-xsmall-ts" type="text" class="form-control" name="xsmall-ts" />
+                                                        <input id="new-logistics-xsmall-ts" type="text" class="form-control" name="xsmallTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Small T-Shirts</label>
-                                                        <input id="new-logistics-small-ts" type="text" class="form-control" name="small-ts" />
+                                                        <input id="new-logistics-small-ts" type="text" class="form-control" name="smallTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Medium T-Shirts</label>
-                                                        <input id="new-logistics-medium-ts" type="text" class="form-control" name="medium-ts" />
+                                                        <input id="new-logistics-medium-ts" type="text" class="form-control" name="mediumTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Large T-Shirts</label>
-                                                        <input id="new-logistics-large-ts" type="text" class="form-control" name="large-ts" />
+                                                        <input id="new-logistics-large-ts" type="text" class="form-control" name="largeTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Extra Large T-Shirts</label>
-                                                        <input id="new-logistics-xlarge-ts" type="text" class="form-control" name="xlarge-ts" />
+                                                        <input id="new-logistics-xlarge-ts" type="text" class="form-control" name="xlargeTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <button type="button" onclick="putLogistics()" class="btn btn-primary">
@@ -858,6 +987,70 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newLogisticsForm').bootstrapValidator({
+                                                            fields: {
+                                                                numCars: { 
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                numBuses: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                numLunches: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                xsmallTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                smallTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                mediumTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                largeTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                xlargeTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
@@ -880,12 +1073,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Cars</label>
-                                                        <input id="update-logistics-num-cars" type="text" class="form-control" name="num-cars" />
+                                                        <input id="update-logistics-num-cars" type="text" class="form-control" name="numCars" />
                                                         <span class="help-block">How many cars (e.g. sedans, vans) will you be parking at KU campus?</span>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Buses</label>
-                                                        <input id="update-logistics-num-buses" type="text" class="form-control" name="number-buses" />
+                                                        <input id="update-logistics-num-buses" type="text" class="form-control" name="numBuses" />
                                                         <span class="help-block">How many buses will you be parking at KU campus?</span>
 
                                                     </div>
@@ -904,7 +1097,7 @@
                                                     </div>
                                                     <div id="update-time-field" class="input-append bootstrap-timepicker has-feedback">
                                                         <label class="control-label">Leave Time</label>
-                                                        <input id="update-logistics-leave-time" type="text" class="form-control" name="leave-time" placeholder="3:00 PM" />
+                                                        <input id="update-logistics-leave-time" type="text" class="form-control" name="leaveTime" placeholder="3:00 PM" />
                                                         <i class="glyphicon glyphicon-time form-control-feedback"></i>
                                                         <span class="help-block">What time do you plan on leaving?</span>
                                                     </div>
@@ -915,30 +1108,30 @@
                                                     </script>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Lunches</label>
-                                                        <input id="update-logistics-num-lunches" type="text" class="form-control" name="num-lunches" />
+                                                        <input id="update-logistics-num-lunches" type="text" class="form-control" name="numLunches" />
                                                         <span class="help-block">How many lunches do you want to purchase? Engineering Expo can provide $3 lunches that include a hot dog, chips, and a soda.</span>
                                                     </div>
                                                     <hr>
-                                                    <span class="help-block">Indicate below the number of T-shirts for each size that you would like to purchase.</span>
+                                                    <p>Indicate below the number of T-shirts for each size that you would like to purchase</p>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Small Extra T-Shirts</label>
-                                                        <input id="update-logistics-xsmall-ts" type="text" class="form-control" name="xsmall-ts" />
+                                                        <input id="update-logistics-xsmall-ts" type="text" class="form-control" name="xsmallTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Small T-Shirts</label>
-                                                        <input id="update-logistics-small-ts" type="text" class="form-control" name="small-ts" />
+                                                        <input id="update-logistics-small-ts" type="text" class="form-control" name="smallTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Medium T-Shirts</label>
-                                                        <input id="update-logistics-medium-ts" type="text" class="form-control" name="medium-ts" />
+                                                        <input id="update-logistics-medium-ts" type="text" class="form-control" name="mediumTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Large T-Shirts</label>
-                                                        <input id="update-logistics-large-ts" type="text" class="form-control" name="large-ts" />
+                                                        <input id="update-logistics-large-ts" type="text" class="form-control" name="largeTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Number of Extra Large T-Shirts</label>
-                                                        <input id="update-logistics-xlarge-ts" type="text" class="form-control" name="xlarge-ts" />
+                                                        <input id="update-logistics-xlarge-ts" type="text" class="form-control" name="xlargeTs" />
                                                     </div>
                                                     <div class="form-group">
                                                         <button type="button" onclick="deleteLogistics()" class="btn btn-danger pull-right">
@@ -998,6 +1191,70 @@
                                                         }
                                                     </script>
                                                 </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateLogisticsForm').bootstrapValidator({
+                                                            fields: {
+                                                                numCars: { 
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                numBuses: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                numLunches: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                xsmallTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                smallTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                mediumTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                largeTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                xlargeTs: {
+                                                                    validators: {
+                                                                        integer: {
+                                                                            message: 'Entry should be a number'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>

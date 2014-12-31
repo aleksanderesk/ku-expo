@@ -14,6 +14,8 @@
 (defquery select-user "sql/select-user.sql")
 (defquery create-user! "sql/insert-user.sql")
 
+(defquery select-teacher-profile "sql/select-teacher-profile.sql")
+
 (defquery select-schools "sql/select-schools.sql")
 (defquery create-school! "sql/insert-school.sql")
 (defquery update-school! "sql/update-school.sql")
@@ -32,6 +34,7 @@
 (defquery delete-competitions-to-team! "sql/delete-competitions-to-team.sql")
 
 (defquery select-teams "sql/select-teams.sql")
+(defquery select-teams-by-name "sql/select-teams-by-name.sql")
 (defquery select-teams-table "sql/select-teams-table.sql")
 (defquery create-team! "sql/insert-team.sql")
 (defquery update-team! "sql/update-team.sql")
@@ -61,6 +64,10 @@
   [fullname username phone password roles]
   (let [password-hash (pass/encrypt password )]
     (create-user! db fullname username phone password-hash roles)))
+
+(defn get-teacher-profile
+  [user-id]
+  (select-teacher-profile db user-id))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -121,14 +128,20 @@
   [user-id]
   (select-teams db user-id))
 
-(defn get-grouped-entries
+(defn teamname-exists?
+  [teamname]
+  (if (seq (select-teams-by-name db teamname))
+    true
+    false))
+
+(defn- get-grouped-entries
   [user-id]
   (->> user-id
       (select-teams-table db)
       (group-by #(:id %))
       vals))
 
-(defn collapse-rows
+(defn- collapse-rows
   [rows]
   (let [collapsed-rows (reduce (fn [coll row] 
             (let [{:keys [id name division student_id comp_id student_name comp_name]} row 
