@@ -28,6 +28,7 @@
 (defquery delete-student! "sql/delete-student.sql")
 
 (defquery create-student-to-team! "sql/insert-student-to-team.sql")
+(defquery delete-student-to-teams! "sql/delete-student-to-teams.sql")
 (defquery delete-students-to-team! "sql/delete-students-to-team.sql")
 
 (defquery create-competition-to-team! "sql/insert-competition-to-team.sql")
@@ -191,7 +192,11 @@
 
 (defn create-student-to-team
   [student-id team-id]
-  (create-student-to-team! db student-id team-id)) ; create a single new record
+  (create-student-to-team! db student-id team-id))
+
+(defn delete-student-to-teams
+  [student-id]
+  (delete-student-to-teams! db student-id))
 
 (defn delete-students-to-team
   [team-id]

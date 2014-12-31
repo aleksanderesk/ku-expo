@@ -88,18 +88,16 @@
   (let [session (friend/identity req)
         user-id (get-in session [:authentications (session :current) :id])
         {:keys [id name division]} (:params req)]
-    (do
-      (db/update-student name division id user-id)
-      (json-response {:result "success"}))))
+    (json-response {:result [(db/delete-student-to-teams id)
+                             (db/update-student name division id user-id)]})))
 
 (defn delete-student
   [req]
   (let [session (friend/identity req)
         user-id (get-in session [:authentications (session :current) :id])
         {:keys [id]} (:params req)]
-    (do
-      (db/delete-student id user-id)
-      (json-response {:result "success"}))))
+    (json-response {:result [(db/delete-student-to-teams id)
+                             (db/delete-student id user-id)]})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
