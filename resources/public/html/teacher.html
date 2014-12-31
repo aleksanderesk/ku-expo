@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Manage Registration</title>
         <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
@@ -28,9 +28,9 @@
                         <li>
                             <a href="/teacher">Teacher</a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="/group">Student Group</a>
-                        </li>
+                        </li>-->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -101,7 +101,7 @@
                             <div class="bs-callout bs-callout-info">
                                 <h4>School Instructions</h4>
                                 <p>Register your school below by clicking the <span class="text-primary">'Add School'</span> button in the Overview header below. Once you have provided the full name and address of your school, it will appear as a row in the Overview table for you to verify.</p>
-                                <p>Clicking on the row will open a dialog to edit the school's information or remove the record entirely if necessary.</p> 
+                                <p>Clicking on the row will open a dialogue allowing you to edit the school's information or remove the record entirely if necessary.</p> 
                                 <p>If you will sponsor multiple schools (e.g. your district's Elementary School <i>and</i> Middle School), you may register each separately.</p>
                             </div>
                         </div>
@@ -178,13 +178,15 @@
                                                                         $('#newSchool').modal('toggle');
                                                                     }
                                                             });
-                                                            $("#newSchoolForm").trigger('reset');
+                                                            $('#newSchoolForm').data('bootstrapValidator').resetForm();
+                                                            $('#newSchoolForm').trigger('reset');
                                                         }
                                                     </script>
                                                 </form>
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#newSchoolForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 name: { 
                                                                     validators: {
@@ -233,7 +235,7 @@
                                                         <input id="update-school-address" type="text" class="form-control" name="address" />
                                                     </div>
                                                     <div class="form-group">
-                                                        <button type="button" onclick="deleteSchool()" class="btn btn-danger pull-right">
+                                                        <button type="delete" onclick="deleteSchool()" class="btn btn-danger pull-right">
                                                             <span class="glyphicon glyphicon-remove"></span>
                                                             Delete
                                                         </button>
@@ -243,20 +245,6 @@
                                                         </button>
                                                     </div>
                                                     <script>
-                                                        function deleteSchool() {
-                                                            $.ajax({
-                                                                    url: '/teacher/schools',
-                                                                    type: 'DELETE',
-                                                                    data: {
-                                                                        id: $('#school-id').val()
-                                                                    },
-                                                                    success: function(result) {
-                                                                        $('#schools-table').bootstrapTable('refresh');
-                                                                        $('#updateSchool').modal('toggle');
-                                                                    }
-                                                            });
-                                                        }
-
                                                         function postSchool() {
                                                             $.ajax({
                                                                     url: '/teacher/schools',
@@ -267,6 +255,21 @@
                                                                         address: $('#update-school-address').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        $('#updateSchoolForm').data('bootstrapValidator').resetForm();
+                                                                        $('#schools-table').bootstrapTable('refresh');
+                                                                        $('#updateSchool').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                        function deleteSchool() {
+                                                            $.ajax({
+                                                                    url: '/teacher/schools',
+                                                                    type: 'DELETE',
+                                                                    data: {
+                                                                        id: $('#school-id').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        $('#updateSchoolForm').data('bootstrapValidator').resetForm();
                                                                         $('#schools-table').bootstrapTable('refresh');
                                                                         $('#updateSchool').modal('toggle');
                                                                     }
@@ -277,6 +280,7 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#updateSchoolForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 name: { 
                                                                     validators: {
@@ -311,7 +315,7 @@
                             <div class="bs-callout bs-callout-info">
                                 <h4>Students Instructions</h4>
                                 <p>Register your students below by clicking the <span class="text-primary">'Add Student'</span> button in the Overview header below for each student. Once you have provided the student's full name and school division (i.e. Elementary, Middle, High School), they will appear as a row in the Overview table for you to verify.</p>
-                                <p>Clicking on the row will open a dialog to edit the student's information or remove the record entirely if necessary.</p> 
+                                <p>Clicking on the row will open a dialogue allowing you to edit the student's information or remove the record entirely if necessary.</p> 
                             </div>
                         </div>
                         <div class="row">
@@ -391,6 +395,7 @@
                                                                         $('#newStudent').modal('toggle');
                                                                     }
                                                             });
+                                                            $('#newStudentForm').data('bootstrapValidator').resetForm();
                                                             $("#newStudentForm").trigger('reset');
                                                         }
                                                     </script>
@@ -398,11 +403,16 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#newStudentForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 name: { 
                                                                     validators: {
                                                                         notEmpty: {
                                                                             message: 'Student name cannot be empty'
+                                                                        },
+                                                                        regexp: {
+                                                                            regexp: /^[^,]+$/,
+                                                                            message: 'Name should be of the form First Last'
                                                                         }
                                                                     }
                                                                 }
@@ -443,7 +453,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <button type="button" onclick="deleteStudent()" class="btn btn-danger pull-right">
+                                                        <button type="delete" onclick="deleteStudent()" class="btn btn-danger pull-right">
                                                             <span class="glyphicon glyphicon-remove"></span>
                                                             Delete
                                                         </button>
@@ -461,6 +471,7 @@
                                                                         id: $('#student-id').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        $('#updateStudentForm').data('bootstrapValidator').resetForm();
                                                                         $('#students-table').bootstrapTable('refresh');
                                                                         $('#updateStudent').modal('toggle');
                                                                     }
@@ -477,6 +488,7 @@
                                                                         division: $('#update-student-division').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        $('#updateStudentForm').data('bootstrapValidator').resetForm();
                                                                         $('#students-table').bootstrapTable('refresh');
                                                                         $('#updateStudent').modal('toggle');
                                                                     }
@@ -487,11 +499,16 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#updateStudentForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 name: { 
                                                                     validators: {
                                                                         notEmpty: {
                                                                             message: 'Student name cannot be empty'
+                                                                        },
+                                                                        regexp: {
+                                                                            regexp: /^[^,]+$/,
+                                                                            message: 'Name should be of the form First Last'
                                                                         }
                                                                     }
                                                                 }
@@ -545,7 +562,6 @@
                                     <script>
                                         $(function() {
                                             $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
-                                                console.log(row);
                                                 var students = row.student_ids.split(', ');
                                                 var competitions = row.comp_ids.split(', ');
                                                 $.ajax({
@@ -648,6 +664,7 @@
                                                                         $('#newTeam').modal('toggle');
                                                                     }
                                                             });
+                                                            $('#newTeamForm').data('bootstrapValidator').resetForm();
                                                             $("#newTeamForm").trigger('reset');
                                                         }
                                                     </script>
@@ -655,6 +672,7 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#newTeamForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 name: { 
                                                                     validators: {
@@ -728,7 +746,7 @@
                                                         });
                                                     </script>
                                                     <div class="form-group">
-                                                        <button type="button" onclick="deleteTeam()" class="btn btn-danger pull-right">
+                                                        <button type="delete" onclick="deleteTeam()" class="btn btn-danger pull-right">
                                                             <span class="glyphicon glyphicon-remove"></span>
                                                             Delete
                                                         </button>
@@ -746,18 +764,13 @@
                                                                         id: $('#team-id').val()
                                                                     },
                                                                     success: function(result) {
-                                                                        console.log(result);
+                                                                        $('#updateTeamForm').data('bootstrapValidator').resetForm();
                                                                         $('#teams-table').bootstrapTable('refresh');
                                                                         $('#updateTeam').modal('toggle');
                                                                     }
                                                             });
                                                         }
                                                         function postTeam() {
-                                                            console.log($('#team-id').val());
-                                                            console.log($('#update-team-name').val());
-                                                            console.log($('#update-team-division').val());
-                                                            console.log($('#update-team-students').val());
-                                                            console.log($('#update-team-competitions').val());
                                                             $.ajax({
                                                                     url: '/teacher/teams',
                                                                     type: 'POST',
@@ -769,7 +782,7 @@
                                                                         competitions: $('#update-team-competitions').val()
                                                                     },
                                                                     success: function(result) {
-                                                                        console.log(result);
+                                                                        $('#updateTeamForm').data('bootstrapValidator').resetForm();
                                                                         $('#teams-table').bootstrapTable('refresh');
                                                                         $('#updateTeam').modal('toggle');
                                                                     }
@@ -780,6 +793,7 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#updateTeamForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 name: { 
                                                                     validators: {
@@ -807,7 +821,7 @@
                             <div class="bs-callout bs-callout-info">
                                 <h4>Logistics Instructions</h4>
                                 <p>Logistics information will allow Expo's administrators to prepare for parking and attendance day-of the event. Please register the required Logistics information by clicking the <span class="text-primary">'Add Logistics'</span> button in the Overview header below. Once you have provided the information, it will appear as a row in the Overview table for you to verify.</p>
-                                <p>Clicking on the row will open a dialog to edit the Logistics information or remove the record entirely if necessary.</p>
+                                <p>Clicking on the row will open a dialogue allowing you to edit the Logistics information or remove the record entirely if necessary.</p>
                             </div>
                         </div>
                         <div class="row">
@@ -979,6 +993,7 @@
                                                                         xlarge_ts: $('#new-logistics-xlarge-ts').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        $('#newLogisticsForm').data('bootstrapValidator').resetForm();
                                                                         $('#logistics-table').bootstrapTable('refresh');
                                                                         $('#newLogistics').modal('toggle');
                                                                     }
@@ -990,6 +1005,7 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#newLogisticsForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 numCars: { 
                                                                     validators: {
@@ -1134,7 +1150,7 @@
                                                         <input id="update-logistics-xlarge-ts" type="text" class="form-control" name="xlargeTs" />
                                                     </div>
                                                     <div class="form-group">
-                                                        <button type="button" onclick="deleteLogistics()" class="btn btn-danger pull-right">
+                                                        <button type="delete" onclick="deleteLogistics()" class="btn btn-danger pull-right">
                                                             <span class="glyphicon glyphicon-remove"></span>
                                                             Delete
                                                         </button>
@@ -1152,6 +1168,7 @@
                                                                         id: $('#logistics-id').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        $('#updateLogisticsForm').data('bootstrapValidator').resetForm();
                                                                         $('#logistics-table').bootstrapTable('refresh');
                                                                         $('#updateLogistics').modal('toggle');
                                                                     }
@@ -1184,6 +1201,7 @@
                                                                         xlarge_ts: $('#update-logistics-xlarge-ts').val()
                                                                     },
                                                                     success: function(result) {
+                                                                        $('#updateLogisticsForm').data('bootstrapValidator').resetForm();
                                                                         $('#logistics-table').bootstrapTable('refresh');
                                                                         $('#updateLogistics').modal('toggle');
                                                                     }
@@ -1194,6 +1212,7 @@
                                                 <script type="text/javascript">
                                                     $(document).ready(function() {
                                                         $('#updateLogisticsForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
                                                             fields: {
                                                                 numCars: { 
                                                                     validators: {

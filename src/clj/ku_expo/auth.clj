@@ -25,4 +25,4 @@
          :or [phone-number nil]} params]
     (do
       (db/create-user fullname username phone password "#{:ku-expo.handler/teacher}")
-      (response "Thanks for signing up! You can return to the login page"))))
+      (resource-response "registration-response.html" {:root "public/html"}))))
