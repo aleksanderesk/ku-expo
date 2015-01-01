@@ -1,6 +1,6 @@
-(defproject ku-expo "0.1.0-SNAPSHOT"
+(defproject ku-expo "1.0.0-SNAPSHOT"
   :description "Registration/Scoring/Administration for KU Engineering Expo"
-  :url "http://example.com/FIXME"
+  :url "http://www.ku-expo-registration.org/"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]

@@ -4,6 +4,11 @@
             [cemerick.friend :as friend]
             [ku-expo.utils.db :as db]))
 
+;; TODO
+;; 1  Exchange DO notation in favor of result of functions in JSON response
+;;    a. ensures execution
+;;    b. useful debuggin information
+
 (defn manage-teacher
   [req]
   (resource-response "teacher.html" {:root "public/html"}))
@@ -164,7 +169,7 @@
 
 (defn get-logistics
   "Get list of registered Logistics. Transform boolean values to human readable
-  forms"
+  alternatives"
   [req]
   (let [session (friend/identity req)
         user-id (get-in session [:authentications (session :current) :id])

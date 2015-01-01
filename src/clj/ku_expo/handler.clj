@@ -22,6 +22,11 @@
 (derive ::teacher ::user)
 (derive ::group ::user)
 
+;; TODO
+;; 1  Consider refactoring of CRUD routes into four functions that take the
+;;    object to change as a parameter
+;; 2  Implement Group scoring
+;; 3  Implement Admin control
 (defroutes teacher-routes
   (GET "/" request (teacher/manage-teacher request))
 
@@ -82,7 +87,7 @@
         (friend/authenticate app-routes
                              {:credential-fn (partial creds/bcrypt-credential-fn db/get-user)
                               :workflows [(workflows/interactive-form)]}))
-      (cors/wrap-cors identity)))
+      (cors/wrap-cors identity))) ; TODO improve security here i.e. limit to site URL
 
 (defn -main [& args]
   (run-jetty #'app {:port 3000}))

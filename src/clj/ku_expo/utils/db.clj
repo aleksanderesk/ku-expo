@@ -11,10 +11,19 @@
          :user (env :db-user)
          :password (env :db-pass)})
 
+;; TODO 
+;; 1  Consider refactor of CRUD operations into four functions functions that
+;;    accept the sql script function, database hook, table, and parameters
+;; 2  Refactor databases' competition_to_team and student_to_team to support
+;;    foreign key constraints
+;; 3  Fix teacher deletion function
+;; 4  Refactor collapse-rows into two more functions
+
 (defquery select-user "sql/select-user.sql")
 (defquery create-user! "sql/insert-user.sql")
 
 (defquery select-teacher-profile "sql/select-teacher-profile.sql")
+; (defquery delete-teacher-profile! "sql/delete-teacher-profile.sql")
 
 (defquery select-schools "sql/select-schools.sql")
 (defquery create-school! "sql/insert-school.sql")
@@ -69,6 +78,11 @@
 (defn get-teacher-profile
   [user-id]
   (select-teacher-profile db user-id))
+
+;; Fix this, check out table aliasing
+;(defn delete-teacher-profile
+;  [user-id]
+;  (delete-teacher-profile! db user-id))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -139,7 +153,7 @@
   [user-id]
   (->> user-id
       (select-teams-table db)
-      (group-by #(:id %))
+      (group-by #(:id %)) ; Fn notation for clarity? # always strikes me as a little too Haskell-terse
       vals))
 
 (defn- collapse-rows
