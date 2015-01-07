@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Manage Scores</title>
+        <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap-table.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrapValidator.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap-callouts.min.css" rel="stylesheet" type="text/css">
+        <script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrap-table.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrapValidator.min.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">KU Expo</a>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="/teacher">Teacher</a>
+                        </li>
+                        <li>
+                            <a href="/group">Student Group</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <button class="btn btn-default navbar-btn" type="button">
+                                <a href="/logout">Sign Off</a>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <ul class="nav nav-tabs" id="divisionTabs" role="tablist" style="margin-bottom: 15px;">
+                <li class="active">
+                    <a data-toggle="tab" href="#instructions">Instructions</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#elementary">Elementary School</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#middle">Middle School</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#high">High School</a>
+                </li>
+            </ul>
+            <!-- Instructions tab -->
+            <div class="tab-content" id="content">
+                <div class="tab-pane fade active in" id="instructions" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Instructions</h4>
+                                <p>This application will allow you to apply scores to all teams enrolled in your student groups competition, separated by their school division through the tabs above: <span class="text-primary">Elementary School</span>, <span class="text-primary">Middle School</span>, and <span class="text-primary">High School</span>.</p>
+                                <p>A listing of all the teams for a given division will appear in a table in the division's tab. Each team will have a guaranteed unique name. When a team approaches to take part in a competition, you may use the table to search for their team name. If it exists within the table, the team may compete. If the team does not appear in the table for their stated name and division, send the team to Expo Registration for proper registering, <b>do not</b> allow the team to compete yet.</p>
+                                <p><span class="text-warning">Note: </span> all scores entered into this application must be normalized out of a minimum of 0 and a maximum of 100. Although you may record your scores however prescribed by your scoring rubric in your own records, any score entered into the Expo-wide scoring application <b>must</b> be scaled or normalized accordingly. You may enter scores as teams compete, or if necessary, you may enter them all at once after you have tabulated your final scores</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>Profile</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="profile-table" data-toggle="table" data-url="/group/profile" data-card-view="true" data-cache="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="email">Email</th>
+                                                <th data-field="org">Organization</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

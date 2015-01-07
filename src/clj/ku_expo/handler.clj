@@ -15,6 +15,7 @@
             [ring.middleware.cors :as cors]
             [ku-expo.auth :as auth]
             [ku-expo.teachers.manage :as teacher]
+            ;[ku-expo.groups.manager :as group]
             [ku-expo.admins.manage :as admin]
             [ku-expo.utils.db :as db]))
 
@@ -55,8 +56,12 @@
   (POST "/logistics" request (teacher/update-logistics request))
   (DELETE "/logistics" request (teacher/delete-logistics request)))
 
-(defroutes group-routes
-  (GET "/" request (response "This page can only be seen by groups.")))
+;(defroutes group-routes
+;  (GET "/" request (group/get-profile request))
+;  
+;  (GET "/profile" request (group/get-profile request))
+;
+;  (GET "/teams" request (group/get-teams request)))
 
 (defroutes admin-routes
   (GET "/" request (response "This page can only be seen by admins.")))
@@ -68,8 +73,8 @@
   (route/resources "/")
   (context "/teacher" request 
            (friend/wrap-authorize teacher-routes #{::teacher}))
-  (context "/group" request
-           (friend/wrap-authorize group-routes #{::group}))
+;  (context "/group" request
+;           (friend/wrap-authorize group-routes #{::group}))
   (context "/admin" request
            (friend/wrap-authorize admin-routes #{::admin}))
   (context "/api" request
@@ -85,7 +90,9 @@
 (def app
   (-> (handler/site
         (friend/authenticate app-routes
-                             {:credential-fn (partial creds/bcrypt-credential-fn db/get-user)
+                             {:login-uri "/login"
+                              :default-landing-uri "/"
+                              :credential-fn #(creds/bcrypt-credential-fn db/get-user %)
                               :workflows [(workflows/interactive-form)]}))
       (cors/wrap-cors identity))) ; TODO improve security here i.e. limit to site URL
 

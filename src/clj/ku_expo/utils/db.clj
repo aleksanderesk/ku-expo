@@ -24,6 +24,7 @@
 
 (defquery select-teacher-profile "sql/select-teacher-profile.sql")
 ; (defquery delete-teacher-profile! "sql/delete-teacher-profile.sql")
+(defquery select-group-profile "sql/select-group-profile.sql")
 
 (defquery select-schools "sql/select-schools.sql")
 (defquery create-school! "sql/insert-school.sql")
@@ -55,6 +56,8 @@
 (defquery update-logistics! "sql/update-logistics.sql")
 (defquery delete-logistics! "sql/delete-logistics.sql")
 
+(defquery select-scores-by-group-division "sql/select-scores-by-group-division.sql")
+
 (defquery select-competitions "sql/select-competitions.sql")
 
 (defn user-exists?
@@ -67,8 +70,10 @@
 (defn get-user
   "Returns a map of the user data"
   [email]
-  (let [result (first (select-user db email))]
-    (update-in result [:roles] read-string)))
+  (if (user-exists? email)
+    (let [result (first (select-user db email))]
+      (update-in result [:roles] read-string))
+    nil))
 
 (defn create-user
   [fullname username phone password roles]
@@ -78,6 +83,10 @@
 (defn get-teacher-profile
   [user-id]
   (select-teacher-profile db user-id))
+
+(defn get-group-profile
+  [user-id]
+  (select-group-profile db user-id))
 
 ;; Fix this, check out table aliasing
 ;(defn delete-teacher-profile
@@ -280,6 +289,16 @@
 (defn delete-logistics
   [logistics-id user-id]
   (delete-logistics! db logistics-id user-id))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Score Operations
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn get-scores-by-group-division
+  [user-id division]
+  (select-scores-by-group-division db user-id division))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
