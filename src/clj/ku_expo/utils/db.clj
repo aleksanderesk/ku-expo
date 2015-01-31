@@ -42,6 +42,7 @@
 (defquery delete-students-to-team! "sql/delete-students-to-team.sql")
 
 (defquery create-competition-to-team! "sql/insert-competition-to-team.sql")
+(defquery update-competition-to-team-score! "sql/update-competition-to-team-score.sql")
 (defquery delete-competitions-to-team! "sql/delete-competitions-to-team.sql")
 
 (defquery select-teams "sql/select-teams.sql")
@@ -56,7 +57,7 @@
 (defquery update-logistics! "sql/update-logistics.sql")
 (defquery delete-logistics! "sql/delete-logistics.sql")
 
-(defquery select-scores-by-group-division "sql/select-scores-by-group-division.sql")
+(defquery select-scores-by-group "sql/select-scores-by-group.sql")
 
 (defquery select-competitions "sql/select-competitions.sql")
 
@@ -296,9 +297,13 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn get-scores-by-group-division
-  [user-id division]
-  (select-scores-by-group-division db user-id division))
+(defn get-scores-by-group
+  [user-id]
+  (select-scores-by-group db user-id))
+
+(defn update-competition-to-team-score
+  [comp-to-team-id score]
+  (update-competition-to-team-score! db score comp-to-team-id)) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

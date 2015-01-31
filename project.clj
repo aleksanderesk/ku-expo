@@ -1,4 +1,4 @@
-(defproject ku-expo "1.0.1-SNAPSHOT"
+(defproject ku-expo "1.6.0-SNAPSHOT"
   :description "Registration/Scoring/Administration for KU Engineering Expo"
   :url "http://www.ku-expo-registration.org/"
   :license {:name "Eclipse Public License"
