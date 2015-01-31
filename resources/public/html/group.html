@@ -8,10 +8,12 @@
         <link href="/css/bootstrap-table.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrapValidator.min.css" rel="stylesheet" type="text/css">
         <link href="/css/bootstrap-callouts.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap-table-filter.css" rel="stylesheet" type="text/css">
         <script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap-table.min.js" type="text/javascript"></script>
         <script src="/js/bootstrapValidator.min.js" type="text/javascript"></script>
+        <script src="/js/bootstrap-table-filter.js" type="text/javascript"></script>
     </head>
     <body>
         <div class="navbar navbar-default">
@@ -44,17 +46,11 @@
                     <a data-toggle="tab" href="#instructions">Instructions</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#elementary">Elementary School</a>
-                </li>
-                <li>
-                    <a data-toggle="tab" href="#middle">Middle School</a>
-                </li>
-                <li>
-                    <a data-toggle="tab" href="#high">High School</a>
+                    <a data-toggle="tab" href="#scores">Scores</a>
                 </li>
             </ul>
-            <!-- Instructions tab -->
             <div class="tab-content" id="content">
+                <!-- Instructions tab -->
                 <div class="tab-pane fade active in" id="instructions" role="tabpanel">
                     <div class="container-fluid">
                         <div class="row">
@@ -77,7 +73,7 @@
                                                 <th data-field="id" data-visible="false">ID</th>
                                                 <th data-field="name">Name</th>
                                                 <th data-field="email">Email</th>
-                                                <th data-field="org">Organization</th>
+                                                <th data-field="organization">Organization</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -86,7 +82,150 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <!-- Scores -->
+                <div class="tab-pane fade" id="scores" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>Scores</h5>
+                                </div>
+                                <!-- Table -->
+                                <div class="panel-body">
+                                    <div id="filter-bar" class="form-inline">
+                                        <div class="btn-toolbar">
+                                            <div class="btn-group">
+                                                <button id="elemFilter" class="btn btn-default">Elementary</button>
+                                                <button id="middleFilter" class="btn btn-default">Middle</button>
+                                                <button id="highFilter" class="btn btn-default">High</button>
+                                                <button id="clearFilter" class="btn btn-default">All</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="scores-table" data-toggle="table" data-url="/group/scores" data-cache="false" data-search="true" data-toolbar="#filter-bar" data-show-columns="true" data-show-filter="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="team_name" data-sortable="true">Team Name</th>
+                                                <th data-field="comp_name" data-sortable="true">Competition</th>
+                                                <th data-field="division" data-sortable="true">Division</th>
+                                                <th data-field="score" data-sortable="true" data-cell-style="cellStyle">Score</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <script>
+                                        $(function() {
+                                            $('#elemFilter').click(function() {
+                                                $('#scores-table').bootstrapTable('filterBy', {
+                                                    division: 'Elementary School'
+                                                });
+                                            });
+                                            $('#middleFilter').click(function() {
+                                                $('#scores-table').bootstrapTable('filterBy', {
+                                                    division: 'Middle School'
+                                                });
+                                            });
+                                            $('#highFilter').click(function() {
+                                                $('#scores-table').bootstrapTable('filterBy', {
+                                                    division: 'High School'
+                                                });
+                                            });
+                                            $('#clearFilter').click(function() {
+                                                $('#scores-table').bootstrapTable('filterBy', {
+                                                });
+                                            });
+                                            $('#scores-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
+                                                $('#team-score-id').val(row.id);
+                                                $('#team-score').val(row.score);
+                                                $('#updateScore').modal('toggle');
+                                            });
+                                        });
+                                        function cellStyle(value, row, index) {
+                                            var classes = ['success', 'danger'];
+                                            if (value === null) {
+                                                return {classes: 'danger'};
+                                            } 
+                                            else {
+                                                return {classes: 'success'};
+                                            }
+                                        }
+                                    </script>
+                                </div>
+                                <!-- Update Score Modal -->
+                                <div class="modal" id="updateScore" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Update Team Score</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="updateScoreForm">
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label class="control-label">Team ID</label>
+                                                        <input id="team-score-id" type="text" class="form-control" name="id" /> <!-- Note, this is team-to-competition ID -->
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Score</label>
+                                                        <input id="team-score" type="text" class="form-control" name="score" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" onclick="postScore()" class="btn btn-info">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function postScore() {
+                                                            $.ajax({
+                                                                url: '/group/score',
+                                                                type: 'POST',
+                                                                data: {
+                                                                    id: $('#team-score-id').val(),
+                                                                    score: $('#team-score').val()
+                                                                },
+                                                                success: function(result) {
+                                                                    $('#updateScoreForm').data('bootstrapValidator').resetForm();
+                                                                    $('#scores-table').bootstrapTable('refresh');
+                                                                    $('#updateScore').modal('toggle');
+                                                                    console.log(result);
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script>
+                                                    $(document).ready(function() {
+                                                        $('#updateScoreForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                score: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Score must be between 0 and 100'
+                                                                        },
+                                                                        between: {
+                                                                            min: 0,
+                                                                            max: 100,
+                                                                            message: 'Score must be between 0 and 100'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
         </div>
     </body>
 </html>

@@ -4,7 +4,7 @@
             [cemerick.friend :as friend]
             [ku-expo.utils.db :as db]))
 
-(defn manager-group
+(defn manage-group
   [req]
   (resource-response "group.html" {:root "public/html"}))
 
@@ -24,7 +24,16 @@
 (defn get-scores
   [req]
   (let [session (friend/identity req)
-        user-id (get-in session [:authentication (session :current) :id])
-        {:keys [division]} (:params req)]
+        user-id (get-in session [:authentications (session :current) :id])]
     (json-response
-      (db/get-scores-by-group-division user-id division))))
+      (db/get-scores-by-group user-id))))
+
+(defn post-score
+  [req]
+  (let [session (friend/identity req)
+        user-id (get-in session [:authentications (session :current) :id])
+        {:keys [id score]} (:params req)]
+    (do
+      (db/update-competition-to-team-score id score)
+      (json-response {:result "success"}))))  
+
