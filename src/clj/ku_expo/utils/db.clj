@@ -60,6 +60,7 @@
 (defquery select-scores-by-group "sql/select-scores-by-group.sql")
 
 (defquery select-competitions "sql/select-competitions.sql")
+(defquery select-logistics-summary "sql/select-logistics-summary.sql")
 
 (defn user-exists?
   "Determine if a given user is already registered"
@@ -314,3 +315,12 @@
 (defn get-competitions
   []
   (select-competitions db))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Admin Operations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn get-logistics-summary
+  []
+  (select-logistics-summary db))

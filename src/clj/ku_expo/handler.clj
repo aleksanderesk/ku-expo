@@ -60,11 +60,11 @@
   (GET "/" request (group/manage-group request))
   (GET "/profile" request (group/get-profile request))
   (GET "/scores" request (group/get-scores request))
-  (POST "/score" request (group/post-score request))
-)
+  (POST "/score" request (group/post-score request)))
 
 (defroutes admin-routes
-  (GET "/" request (response "This page can only be seen by admins.")))
+  (GET "/" request (admin/manage-admin request))
+  (GET "/logistics-summary" request (admin/get-logistics-summary request)))
 
 (defroutes api-routes
   (GET "/competitions" request (admin/get-competitions)))
