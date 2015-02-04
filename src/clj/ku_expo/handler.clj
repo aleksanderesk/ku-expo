@@ -93,7 +93,8 @@
                              {:login-uri "/login"
                               :default-landing-uri "/"
                               :credential-fn #(creds/bcrypt-credential-fn db/get-user %)
-                              :workflows [(workflows/interactive-form)]}))
+                              :workflows [(workflows/interactive-form
+                                          :login-failure-handler (fn [req] (auth/wrong-login)))]}))
       (cors/wrap-cors identity))) ; TODO improve security here i.e. limit to site URL
 
 (defn -main [& args]

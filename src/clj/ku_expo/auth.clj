@@ -7,6 +7,10 @@
   []
   (resource-response "login.html" {:root "public/html"}))
 
+(defn wrong-login
+  []
+  (resource-response "wrong-login.html" {:root "public/html"}))
+
 (defn registration
   []
   (resource-response "register.html" {:root "public/html"}))
