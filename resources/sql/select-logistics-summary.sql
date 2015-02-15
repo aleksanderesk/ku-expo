@@ -2,6 +2,7 @@ SELECT
     (SELECT COUNT(*) FROM schools) AS num_schools,
     (SELECT COUNT(*) FROM students) AS num_students,
     (SELECT COUNT(*) FROM teams) AS num_teams,
+    SUM(attend_opening) AS attending_opening,
     SUM(leave_early) AS leaving_early, 
     SUM(num_cars) AS num_cars, 
     SUM(num_buses) AS num_buses, 

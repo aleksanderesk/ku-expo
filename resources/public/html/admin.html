@@ -20,6 +20,7 @@
         <script src="/js/jquery.bootstrap-duallistbox.min.js" type="text/javascript"></script>
         <script src="/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
     </head>
+    <body>
         <div class="navbar navbar-default">
             <div class="container">
                 <div class="navbar-header">
@@ -46,9 +47,24 @@
                 <li class="active">
                     <a data-toggle="tab" href="#general">Overview</a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#teachers">Teachers</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#schools">Schools</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#students">Students</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#teams">Teams</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#scorers">Scorers</a>
+                </li>
             </ul>
-            <!-- Overview Tab -->
             <div class="tab-content" id="content">
+                <!-- Overview Tab -->
                 <div class="tab-pane fade active in" id="general" role="tabpanel">
                     <div class="container-fluid">
                         <div class="row">
@@ -69,7 +85,8 @@
                                                 <th data-field="num_schools"># Schools</th>
                                                 <th data-field="num_students"># Students</th>
                                                 <th data-field="num_teams"># Teams</th>
-                                                <th data-field="leaving_early"># Leaving Early</th>
+                                                <th data-field="attending_opening"># Schools at Opening</th>
+                                                <th data-field="leaving_early"># Schools Leaving Early</th>
                                                 <th data-field="num_cars"># Cars</th>
                                                 <th data-field="num_buses"># Buses</th>
                                                 <th data-field="xsmall_ts"># Extra Small T's</th>
@@ -85,7 +102,852 @@
                         </div>
                     </div>
                 </div>
+                <!-- Teachers -->
+                <div class="tab-pane fade" id="teachers" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Teachers</h4>
+                                <p>From this page you will be able to manage the various functions of Engineering Expo</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>Teachers Overview</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="teachers-table" data-toggle="table" data-url="/admin/teachers-summary" data-card-view="true" data-cache="true" data-pagination="true" data-search="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="email">Email</th>
+                                                <th data-field="phone">Phone</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Schools -->
+                <div class="tab-pane fade" id="schools" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Schools</h4>
+                                <p>From this page you will be able to manage the various functions of Engineering Expo</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSchool">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            Add School
+                                        </button>
+                                    </div>
+                                    <h5>Schools Overview</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="schools-table" data-toggle="table" data-url="/admin/schools-summary" data-card-view="true" data-cache="true" data-pagination="true" data-search="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="teacher_id" data-visible="false">Teacher ID</th>
+                                                <th data-field="teacher_name">Teacher</th>
+                                                <th data-field="address">Address</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <script>
+                                        $(function() {
+                                            $('#schools-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
+                                                $('#school-id').val(row.id);
+                                                $('#update-school-name').val(row.name);
+                                                $('#update-school-teacher-id').val(row.teacher_id);
+                                                $('#update-school-address').val(row.address);
+                                                $('#updateSchool').modal('toggle');
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <!-- New School Modal -->
+                                <div class="modal fade" id="newSchool" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Add School</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="newSchoolForm">
+                                                    <div class="form-group">
+                                                        <label>Teacher</label>
+                                                        <select id="new-school-teacher-id" class="form-control teachers">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">School Name</label>
+                                                        <input id="new-school-name" type="text" class="form-control" name="name" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Address</label>
+                                                        <input id="new-school-address" type="text" class="form-control" name="address" placeholder="Street, City, State and Zip" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" onclick="putSchool()" class="btn btn-primary">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                        function putSchool() {
+                                                            $.ajax({
+                                                                    url: '/admin/school',
+                                                                    type: 'PUT',
+                                                                    data: {
+                                                                        name: $('#new-school-name').val(),
+                                                                        teacher_id: $('#new-school-teacher-id').val(),
+                                                                        address: $('#new-school-address').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#schools-table').bootstrapTable('refresh');
+                                                                        $('#newSchool').modal('toggle');
+                                                                    }
+                                                            });
+                                                            $('#newSchoolForm').data('bootstrapValidator').resetForm();
+                                                            $('#newSchoolForm').trigger('reset');
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newSchoolForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'School name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                address: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Address cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Update School Modal -->
+                                <div class="modal fade" id="updateSchool" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Update School</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="updateSchoolForm">
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label>Teacher</label>
+                                                        <select id="update-school-teacher-id" class="form-control teachers">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label class="control-label">School ID</label>
+                                                        <input id="school-id" type="text" class="form-control" name="id" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">School Name</label>
+                                                        <input id="update-school-name" type="text" class="form-control" name="name" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Address</label>
+                                                        <input id="update-school-address" type="text" class="form-control" name="address" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="delete" onclick="deleteSchool()" class="btn btn-danger pull-right">
+                                                            <span class="glyphicon glyphicon-remove"></span>
+                                                            Delete
+                                                        </button>
+                                                        <button type="button" onclick="postSchool()" class="btn btn-info">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function postSchool() {
+                                                            $.ajax({
+                                                                    url: '/admin/school',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        id: $('#school-id').val(),
+                                                                        teacher_id: $('#update-school-teacher-id').val(),
+                                                                        name: $('#update-school-name').val(),
+                                                                        address: $('#update-school-address').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        $('#updateSchoolForm').data('bootstrapValidator').resetForm();
+                                                                        $('#schools-table').bootstrapTable('refresh');
+                                                                        $('#updateSchool').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                        function deleteSchool() {
+                                                            $.ajax({
+                                                                    url: '/admin/school',
+                                                                    type: 'DELETE',
+                                                                    data: {
+                                                                        id: $('#school-id').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#updateSchoolForm').data('bootstrapValidator').resetForm();
+                                                                        $('#schools-table').bootstrapTable('refresh');
+                                                                        $('#updateSchool').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateSchoolForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'School name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                address: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Address cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Students -->
+                <div class="tab-pane fade" id="students" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Students</h4>
+                                <p>From this page you will be able to manage the various functions of Engineering Expo</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newStudent">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            Add Student
+                                        </button>
+                                    </div>
+                                    <h5>Students Overview</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="students-table" data-toggle="table" data-url="/admin/students-summary" data-card-view="true" data-cache="true" data-pagination="true" data-search="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="teacher_id" data-visible="false">Teacher ID</th>
+                                                <th data-field="teacher_name">Teacher</th>
+                                                <th data-field="division">Division</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <script>
+                                        $(function() {
+                                            $('#students-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
+                                                $('#student-id').val(row.id);
+                                                $('#update-student-name').val(row.name);
+                                                $('#update-student-teacher-id').val(row.teacher_id);
+                                                $('#update-student-division').val(row.division);
+                                                $('#updateStudent').modal('toggle');
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <!-- New Student Modal -->
+                                <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Add Student</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="newStudentForm">
+                                                    <div class="form-group">
+                                                        <label>Teacher</label>
+                                                        <select id="new-student-teacher-id" class="form-control teachers">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Student Name</label>
+                                                        <input id="new-student-name" type="text" class="form-control" name="name" placeholder="Firstname Lastname" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Division</label>
+                                                        <select id="new-student-division" class="form-control">
+                                                            <option>Elementary School</option>
+                                                            <option>Middle School</option>
+                                                            <option>High School</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" onclick="putStudent()" class="btn btn-primary">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function putStudent() {
+                                                            $.ajax({
+                                                                    url: '/admin/student',
+                                                                    type: 'PUT',
+                                                                    data: {
+                                                                        name: $('#new-student-name').val(),
+                                                                        teacher_id: $('#new-student-teacher-id').val(),
+                                                                        division: $('#new-student-division').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#students-table').bootstrapTable('refresh');
+                                                                        $('#newStudent').modal('toggle');
+                                                                    }
+                                                            });
+                                                            $('#newStudentForm').data('bootstrapValidator').resetForm();
+                                                            $("#newStudentForm").trigger('reset');
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newStudentForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Student name cannot be empty'
+                                                                        },
+                                                                        regexp: {
+                                                                            regexp: /^[^,]+$/,
+                                                                            message: 'Name should be of the form First Last'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Update Student Modal -->
+                                <div class="modal fade" id="updateStudent" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Update Student</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="updateStudentForm">
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label>Teacher</label>
+                                                        <select id="update-student-teacher-id" class="form-control teachers">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label class="control-label">Student ID</label>
+                                                        <input id="student-id" type="text" class="form-control" name="id" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Student Name</label>
+                                                        <input id="update-student-name" type="text" class="form-control" name="name" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Division</label>
+                                                        <select id="update-student-division" class="form-control">
+                                                            <option>Elementary School</option>
+                                                            <option>Middle School</option>
+                                                            <option>High School</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="delete" onclick="deleteStudent()" class="btn btn-danger pull-right">
+                                                            <span class="glyphicon glyphicon-remove"></span>
+                                                            Delete
+                                                        </button>
+                                                        <button type="button" onclick="postStudent()" class="btn btn-info">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function deleteStudent() {
+                                                            $.ajax({
+                                                                    url: '/admin/student',
+                                                                    type: 'DELETE',
+                                                                    data: {
+                                                                        id: $('#student-id').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#updateStudentForm').data('bootstrapValidator').resetForm();
+                                                                        $('#students-table').bootstrapTable('refresh');
+                                                                        $('#teams-table').bootstrapTable('refresh');
+                                                                        $('#updateStudent').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+
+                                                        function postStudent() {
+                                                            $.ajax({
+                                                                    url: '/admin/student',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        id: $('#student-id').val(),
+                                                                        teacher_id: $('#update-student-teacher-id').val(),
+                                                                        name: $('#update-student-name').val(),
+                                                                        division: $('#update-student-division').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#updateStudentForm').data('bootstrapValidator').resetForm();
+                                                                        $('#students-table').bootstrapTable('refresh');
+                                                                        $('#teams-table').bootstrapTable('refresh');
+                                                                        $('#updateStudent').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateStudentForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Student name cannot be empty'
+                                                                        },
+                                                                        regexp: {
+                                                                            regexp: /^[^,]+$/,
+                                                                            message: 'Name should be of the form First Last'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Teams -->
+                <div class="tab-pane fade" id="teams" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Teams</h4>
+                                <p>From this page you will be able to manage the various functions of Engineering Expo</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTeam">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            Add Team
+                                        </button>
+                                    </div>
+                                    <h5>Teams Overview</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="teams-table" data-toggle="table" data-url="/admin/teams-summary" data-card-view="true" data-cache="true" data-pagination="true" data-search="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="teacher_id" data-visible="false">Teacher ID</th>
+                                                <th data-field="teacher_name">Teacher</th>
+                                                <th data-field="student_names">Students</th>
+                                                <th data-field="comp_names">Competitions</th>
+                                                <th data-field="division">Division</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <script>
+                                        $(function() {
+                                            $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
+                                                var students = row.student_ids.split(', ');
+                                                var competitions = row.comp_ids.split(', ');
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/admin/students-teacher-division',
+                                                    data: {
+                                                        teacher_id: row.teacher_id,
+                                                        division: row.division
+                                                    },
+                                                    success: function(result) {
+                                                        $('#update-team-students option').remove();
+                                                        $.each(result, function() {
+                                                            if(($.inArray(String(this.id), students)) > -1) {
+                                                                $('#update-team-students').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-students').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
+                                                        });
+                                                        $('#update-team-students').bootstrapDualListbox('refresh');
+                                                    }
+                                                });
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/api/competitions',
+                                                    success: function(result) {
+                                                        $('#update-team-competitions option').remove();
+                                                        $.each(result, function() {
+                                                            if(($.inArray(String(this.id), competitions)) > -1) {
+                                                                $('#update-team-competitions').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-competitions').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
+                                                        });
+                                                        $('#update-team-competitions').bootstrapDualListbox('refresh');
+                                                    }
+                                                });
+                                                $('#team-id').val(row.id);
+                                                $('#update-team-name').val(row.name);
+                                                $('#update-team-teacher-id').val(row.teacher_id);
+                                                $('#update-team-division').val(row.division);
+                                                $('#updateTeam').modal('toggle');
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <!-- New Team Modal -->
+                                <div class="modal fade" id="newTeam" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Add Team</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="newTeamForm">
+                                                    <div class="form-group">
+                                                        <label>Teacher</label>
+                                                        <select id="new-team-teacher-id" class="form-control teachers">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Team Name</label>
+                                                        <input id="new-team-name" type="text" class="form-control" name="name" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Division</label>
+                                                        <select id="new-team-division" class="form-control">
+                                                            <option>Elementary School</option>
+                                                            <option>Middle School</option>
+                                                            <option>High School</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" onclick="putTeam()" class="btn btn-primary">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function putTeam() {
+                                                            $.ajax({
+                                                                    url: '/admin/team',
+                                                                    type: 'PUT',
+                                                                    data: {
+                                                                        teacher_id: $('#new-team-teacher-id').val(),
+                                                                        name: $('#new-team-name').val(),
+                                                                        division: $('#new-team-division').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#teams-table').bootstrapTable('refresh');
+                                                                        $('#newTeam').modal('toggle');
+                                                                    }
+                                                            });
+                                                            $('#newTeamForm').data('bootstrapValidator').resetForm();
+                                                            $("#newTeamForm").trigger('reset');
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#newTeamForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Team name cannot be empty'
+                                                                        },
+                                                                        remote: {
+                                                                            url: '/api/valid-teamname',
+                                                                            message: 'There is already a team registered with this name'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Update Team Modal -->
+                                <div class="modal fade" id="updateTeam" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Update Team</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="updateTeamForm">
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label>Teacher</label>
+                                                        <select id="update-team-teacher-id" class="form-control teachers">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label class="control-label">Team ID</label>
+                                                        <input id="team-id" type="text" class="form-control" name="id" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Team Name</label>
+                                                        <input id="update-team-name" type="text" class="form-control" name="name" />
+                                                    </div>
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label class="control-label">Division</label>
+                                                        <select id="update-team-division" class="form-control">
+                                                            <option>Elementary School</option>
+                                                            <option>Middle School</option>
+                                                            <option>High School</option>
+                                                        </select>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <select id="update-team-students" multiple="multiple" style="display: none;">
+                                                        </select>
+                                                        <span class="help-block">Select the students to include in this team by clicking on their names in the left-hand list above. You may remove a student from the team by clicking on their name in the right-hand list.</span>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                        var updateStudents = $('#update-team-students').bootstrapDualListbox({
+                                                                nonSelectedListLabel: 'Students List',
+                                                                selectedListLabel: 'Team Members'
+                                                        });
+                                                    </script>
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <select id="update-team-competitions" multiple="multiple" style="display: none;">
+                                                        </select>
+                                                        <span class="help-block">Select the competitions to enroll this team in by clicking on their names in the left-hand list above. You may un-enroll the team from competitions by clicking on the competition name in right-hand list.</span>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                        var updateStudents = $('#update-team-competitions').bootstrapDualListbox({
+                                                                nonSelectedListLabel: 'Competitions List',
+                                                                selectedListLabel: 'Selected Competitions'
+                                                        });
+                                                    </script>
+                                                    <div class="form-group">
+                                                        <button type="delete" onclick="deleteTeam()" class="btn btn-danger pull-right">
+                                                            <span class="glyphicon glyphicon-remove"></span>
+                                                            Delete
+                                                        </button>
+                                                        <button type="button" onclick="postTeam()" class="btn btn-info">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function deleteTeam() {
+                                                            $.ajax({
+                                                                    url: '/admin/team',
+                                                                    type: 'DELETE',
+                                                                    data: {
+                                                                        id: $('#team-id').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#updateTeamForm').data('bootstrapValidator').resetForm();
+                                                                        $('#teams-table').bootstrapTable('refresh');
+                                                                        $('#updateTeam').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                        function postTeam() {
+                                                            $.ajax({
+                                                                    url: '/admin/team',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        id: $('#team-id').val(),
+                                                                        teacher_id: $('#update-team-teacher-id').val(),
+                                                                        name: $('#update-team-name').val(),
+                                                                        division: $('#update-team-division').val(),
+                                                                        students: $('#update-team-students').val(),
+                                                                        competitions: $('#update-team-competitions').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#updateTeamForm').data('bootstrapValidator').resetForm();
+                                                                        $('#teams-table').bootstrapTable('refresh');
+                                                                        $('#updateTeam').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $('#updateTeamForm').bootstrapValidator({
+                                                            submitButtons: 'button[type="button"]',
+                                                            fields: {
+                                                                name: { 
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Team name cannot be empty'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scorers -->
+                <div class="tab-pane fade" id="scorers" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Scorers</h4>
+                                <p>From this page you will be able to manage the various functions of Engineering Expo</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>Scorers Overview</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table id="scorers-table" data-toggle="table" data-url="/admin/scorers-summary" data-card-view="true" data-cache="true" data-pagination="true" data-search="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="name">Name</th>
+                                                <th data-field="email">Email</th>
+                                                <th data-field="org_names">Organizations</th>
+                                                <th data-field="comp_names">Competitions</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $.ajax({
+                    dataType: 'json',
+                    url: '/api/teachers',
+                    success: function(result) {
+                        $('.teachers option').remove();
+                        $.each(result, function() {
+                            $('.teachers').append($("<option/>", {
+                                value: this.id,
+                                text: this.name
+                            }));
+                        });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

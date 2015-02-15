@@ -45,7 +45,6 @@
   (DELETE "/students" request (teacher/delete-student request))
 
   (GET "/teams" request (teacher/get-teams request))
-  (GET "/valid-teamname" request (teacher/teamname-valid? request))
   (GET "/teams-table" request (teacher/get-teams-table request))
   (PUT "/teams" request (teacher/create-team request))
   (POST "/teams" request (teacher/update-team request))
@@ -64,10 +63,31 @@
 
 (defroutes admin-routes
   (GET "/" request (admin/manage-admin request))
-  (GET "/logistics-summary" request (admin/get-logistics-summary request)))
+  (GET "/logistics-summary" request (admin/get-logistics-summary request))
+  (GET "/teachers-summary" request (admin/get-teachers-summary request))
+
+  (GET "/scorers-summary" request (admin/get-scorers-summary request))
+  
+  (GET "/schools-summary" request (admin/get-schools-summary request))
+  (PUT "/school" request (admin/create-school request))
+  (POST "/school" request (admin/update-school request))
+  (DELETE "/school" request (admin/delete-school request))
+
+  (GET "/students-summary" request (admin/get-students-summary request))
+  (GET "/students-teacher-division" request (admin/get-students-by-teacher-division request))
+  (PUT "/student" request (admin/create-student request))
+  (POST "/student" request (admin/update-student request))
+  (DELETE "/student" request (admin/delete-student request))
+
+  (GET "/teams-summary" request (admin/get-teams-summary request))
+  (PUT "/team" request (admin/create-team request))
+  (POST "/team" request (admin/update-team request))
+  (DELETE "/team" request (admin/delete-team request)))
 
 (defroutes api-routes
-  (GET "/competitions" request (admin/get-competitions)))
+  (GET "/valid-teamname" request (admin/teamname-valid? request))
+  (GET "/competitions" request (admin/get-competitions))
+  (GET "/teachers" request (admin/get-teachers)))
 
 (defroutes app-routes
   (route/resources "/")

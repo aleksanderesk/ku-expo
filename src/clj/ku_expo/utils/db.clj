@@ -23,6 +23,7 @@
 (defquery create-user! "sql/insert-user.sql")
 
 (defquery select-teacher-profile "sql/select-teacher-profile.sql")
+(defquery select-teachers "sql/select-teachers.sql")
 ; (defquery delete-teacher-profile! "sql/delete-teacher-profile.sql")
 (defquery select-group-profile "sql/select-group-profile.sql")
 
@@ -30,12 +31,14 @@
 (defquery create-school! "sql/insert-school.sql")
 (defquery update-school! "sql/update-school.sql")
 (defquery delete-school! "sql/delete-school.sql")
+(defquery delete-school-by-teacher! "sql/delete-school-by-teacher.sql")
 
 (defquery select-students "sql/select-students.sql")
 (defquery select-students-by-division "sql/select-students-by-division.sql")
 (defquery create-student! "sql/insert-student.sql")
 (defquery update-student! "sql/update-student.sql")
 (defquery delete-student! "sql/delete-student.sql")
+(defquery delete-student-by-teacher! "sql/delete-student-by-teacher.sql")
 
 (defquery create-student-to-team! "sql/insert-student-to-team.sql")
 (defquery delete-student-to-teams! "sql/delete-student-to-teams.sql")
@@ -51,6 +54,7 @@
 (defquery create-team! "sql/insert-team.sql")
 (defquery update-team! "sql/update-team.sql")
 (defquery delete-team! "sql/delete-team.sql")
+(defquery delete-team-by-teacher! "sql/delete-team-by-teacher.sql")
 
 (defquery select-logistics "sql/select-logistics.sql")
 (defquery create-logistics! "sql/insert-logistics.sql")
@@ -61,6 +65,12 @@
 
 (defquery select-competitions "sql/select-competitions.sql")
 (defquery select-logistics-summary "sql/select-logistics-summary.sql")
+(defquery select-teachers-summary "sql/select-teachers-summary.sql")
+(defquery select-schools-summary "sql/select-schools-summary.sql")
+(defquery select-students-summary "sql/select-students-summary.sql")
+(defquery select-teams-summary "sql/select-teams-summary.sql")
+
+(defquery select-scorers-summary "sql/select-scorers-summary.sql")
 
 (defn user-exists?
   "Determine if a given user is already registered"
@@ -115,8 +125,10 @@
   (update-school! db name address school-id user-id))
 
 (defn delete-school
-  [school-id user-id]
-  (delete-school! db school-id user-id))
+  ([school-id]
+   (delete-school! db school-id))
+  ([school-id user-id]
+    (delete-school-by-teacher! db school-id user-id)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -141,8 +153,10 @@
   (update-student! db name division student-id user-id))
 
 (defn delete-student
-  [student-id user-id]
-  (delete-student! db student-id user-id))
+  ([student-id]
+   (delete-student! db student-id))
+  ([student-id user-id]
+   (delete-student-by-teacher! db student-id user-id)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -160,21 +174,27 @@
     true
     false))
 
-(defn- get-grouped-entries
-  [user-id]
+(defn get-grouped-entries
+  ([user-id]
   (->> user-id
       (select-teams-table db)
       (group-by #(:id %)) ; Fn notation for clarity? # always strikes me as a little too Haskell-terse
       vals))
+  ([]
+   (->> (select-teams-summary db)
+        (group-by #(:id %))
+        vals)))
 
-(defn- collapse-rows
+(defn collapse-rows
   [rows]
   (let [collapsed-rows (reduce (fn [coll row] 
-            (let [{:keys [id name division student_id comp_id student_name comp_name]} row 
+            (let [{:keys [id name teacher_id teacher_name division student_id comp_id student_name comp_name]} row 
                   {:keys [student_ids comp_ids student_names comp_names]} coll] 
               (-> coll 
                   (assoc :id id) 
-                  (assoc :name name) 
+                  (assoc :name name)
+                  (assoc :teacher_id teacher_id)
+                  (assoc :teacher_name teacher_name) 
                   (assoc :division division) 
                   (assoc :student_ids 
                          (conj student_ids student_id))
@@ -184,7 +204,7 @@
                          (conj student_names student_name))
                   (assoc :comp_names
                          (conj comp_names comp_name)))))
-          {:id nil :name nil :division nil :student_ids #{} :comp_ids #{} :student_names #{} :comp_names #{}}
+          {:id nil :name nil :teacher_id nil :teacher_name nil :division nil :student_ids #{} :comp_ids #{} :student_names #{} :comp_names #{}}
           rows)
         {:keys [student_ids comp_ids student_names comp_names]} collapsed-rows]
     (-> collapsed-rows
@@ -206,8 +226,10 @@
   (update-team! db name division team-id user-id))
 
 (defn delete-team
-  [team-id user-id]
-  (delete-team! db team-id user-id))
+  ([team-id]
+   (delete-team! db team-id))
+  ([team-id user-id]
+   (delete-team-by-teacher! db team-id user-id)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -308,13 +330,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Competition Operations
+;; API Operations
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn get-competitions
   []
   (select-competitions db))
+
+(defn get-teachers
+  []
+  (select-teachers db))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -324,3 +350,50 @@
 (defn get-logistics-summary
   []
   (select-logistics-summary db))
+
+(defn get-teachers-summary
+  []
+  (select-teachers-summary db))
+
+(defn collapse-scorers
+  [rows]
+  (let [collapsed-rows (reduce (fn [coll row] 
+            (let [{:keys [id name phone email org_id comp_id org_name comp_name]} row 
+                  {:keys [org_ids comp_ids org_names comp_names]} coll] 
+              (-> coll 
+                  (assoc :id id) 
+                  (assoc :name name)
+                  (assoc :phone phone)
+                  (assoc :email email)
+                  (assoc :org_ids 
+                         (conj org_ids org_id))
+                  (assoc :comp_ids
+                         (conj comp_ids comp_id))
+                  (assoc :org_names
+                         (conj org_names org_name))
+                  (assoc :comp_names
+                         (conj comp_names comp_name)))))
+          {:id nil :name nil :phone nil :email nil :org_ids #{} :comp_ids #{} :org_names #{} :comp_names #{}}
+          rows)
+        {:keys [org_ids comp_ids org_names comp_names]} collapsed-rows]
+    (-> collapsed-rows
+        (assoc :org_ids (clojure.string/join ", " org_ids))
+        (assoc :comp_ids (clojure.string/join ", " comp_ids))
+        (assoc :org_names (clojure.string/join ", " org_names))
+        (assoc :comp_names (clojure.string/join ", " comp_names)))))
+
+(defn get-scorers-summary
+  []
+  (map collapse-scorers (vals (group-by #(:id %) (select-scorers-summary db)))))
+
+(defn get-schools-summary
+  []
+  (select-schools-summary db))
+
+(defn get-students-summary
+  []
+  (select-students-summary db))
+
+(defn get-teams-summary
+  []
+  (sort-by :name (map collapse-rows (get-grouped-entries))))

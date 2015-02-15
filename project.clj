@@ -36,6 +36,6 @@
                                    :pretty-print false}}]}
   :profiles {:dev {:env {:db-url "localhost"
                          :db-port 3306
-                         :db-name "kuexpo"
+                         :db-name "kuexpotest"
                          :db-user "root"
                          :db-pass "password"}}})
