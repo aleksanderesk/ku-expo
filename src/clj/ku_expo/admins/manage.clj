@@ -23,6 +23,12 @@
   (json-response
     (db/get-scorers-summary)))
 
+(defn update-scorer
+  [params]
+  (let [{:keys [id org]} params]
+    (json-response [(db/delete-user-to-org id)
+                    (db/create-user-to-org id org)])))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; School Operations
@@ -123,6 +129,10 @@
 (defn get-competitions
   []
   (json-response (db/get-competitions)))
+
+(defn get-orgs
+  []
+  (json-response (db/get-groups)))
 
 (defn get-teachers
   []

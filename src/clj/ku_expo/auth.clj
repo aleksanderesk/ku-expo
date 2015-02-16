@@ -3,6 +3,8 @@
             [ring.util.json-response :refer [json-response]]
             [ku-expo.utils.db :as db]))
 
+;; TODO
+;; 1 Collapse user registration functions
 (defn login
   []
   (resource-response "login.html" {:root "public/html"}))
@@ -26,7 +28,13 @@
 (defn register-user
   [params]
   (let [{:keys [fullname username phone password]
-         :or [phone-number nil]} params]
+         :or [phone nil]} params]
     (do
       (db/create-user fullname username phone password "#{:ku-expo.handler/teacher}")
       (resource-response "registration-response.html" {:root "public/html"}))))
+
+(defn register-scorer
+  [params]
+  (let [{:keys [fullname username phone password]
+         :or [phone nil]} params]
+    (json-response (db/create-user fullname username phone password "#{:ku-expo.handler/group}"))))

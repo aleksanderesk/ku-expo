@@ -62,6 +62,8 @@
 (defquery delete-logistics! "sql/delete-logistics.sql")
 
 (defquery select-scores-by-group "sql/select-scores-by-group.sql")
+(defquery create-user-to-group! "sql/insert-user-to-group.sql")
+(defquery delete-user-to-group! "sql/delete-user-to-group.sql")
 
 (defquery select-competitions "sql/select-competitions.sql")
 (defquery select-logistics-summary "sql/select-logistics-summary.sql")
@@ -71,6 +73,7 @@
 (defquery select-teams-summary "sql/select-teams-summary.sql")
 
 (defquery select-scorers-summary "sql/select-scorers-summary.sql")
+(defquery select-orgs "sql/select-orgs.sql")
 
 (defn user-exists?
   "Determine if a given user is already registered"
@@ -342,6 +345,10 @@
   []
   (select-teachers db))
 
+(defn get-groups
+  []
+  (select-orgs db))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Admin Operations
@@ -385,6 +392,14 @@
 (defn get-scorers-summary
   []
   (map collapse-scorers (vals (group-by #(:id %) (select-scorers-summary db)))))
+
+(defn delete-user-to-org
+  [id]
+  (delete-user-to-group! db id))
+
+(defn create-user-to-org
+  [id org]
+  (create-user-to-group! db id org))
 
 (defn get-schools-summary
   []

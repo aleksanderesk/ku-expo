@@ -911,6 +911,12 @@
                         <div class="row">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newScorer">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            Register Scorer
+                                        </button>
+                                    </div>
                                     <h5>Scorers Overview</h5>
                                 </div>
                                 <div class="panel-body">
@@ -925,6 +931,187 @@
                                             </tr>
                                         </thead>
                                     </table>
+                                    <script>
+                                        $(function() {
+                                            $('#scorers-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
+                                                $('#scorer-id').val(row.id);
+                                                $('#updateScorer').modal('toggle');
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                                <!-- New Scorer Modal -->
+                                <div class="modal fade" id="newScorer" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Register Scorer</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="newScorerForm">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Full name</label>
+                                                        <input type="text" id="fullname" class="form-control" name="fullname" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Email</label>
+                                                        <input type="text" id="username" class="form-control" name="username" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Phone (optional)</label>
+                                                        <input type="text" id="phone" class="form-control" name="phone" placeholder="555-555-5555" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Password</label>
+                                                        <input type="password" id="password" class="form-control" name="password" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Confirm password</label>
+                                                        <input type="password" id="confirm" class="form-control" name="confirm" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" onclick="putScorer()" class="btn btn-primary">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function putScorer() {
+                                                            $.ajax({
+                                                                    url: '/admin/register-scorer',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        fullname: $('#fullname').val(),
+                                                                        username: $('#username').val(),
+                                                                        phone: $('#phone').val(),
+                                                                        password: $('#password').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        $('#scorers-table').bootstrapTable('refresh');
+                                                                        $('#newScorer').modal('toggle');
+                                                                    }
+                                                            });
+                                                            $('#newScorerForm').data('bootstrapValidator').resetForm();
+                                                            $('#newScorerForm').trigger('reset');
+                                                        }
+                                                    </script>
+                                                </form>
+                                                <script>
+                                                    $(document).ready(function() {
+                                                        $('#newScorerForm').bootstrapValidator({
+                                                            fields: {
+                                                                fullname: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Please providie a name'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                username: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Please provide an email address'
+                                                                        },
+                                                                        emailAddress: {
+                                                                            message: 'The email you provided is not valid'
+                                                                        },
+                                                                        remote: {
+                                                                            url: '/valid-username',
+                                                                            message: 'This email is already registered to an existing user'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                phone: {
+                                                                    validators: {
+                                                                        phone: {
+                                                                            country: 'US',
+                                                                            message: 'Please enter a valid phone number'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                password: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Please provide a password'
+                                                                        },
+                                                                        stringLength: {
+                                                                            min: 8,
+                                                                            message: 'The password must be at least 8 characters'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                confirm: {
+                                                                    validators: {
+                                                                        notEmpty: {
+                                                                            message: 'Please confirm your password'
+                                                                        },
+                                                                        identical: {
+                                                                            field: 'password',
+                                                                            message: 'Passwords must be identiical'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Update Scorer Modal -->
+                                <div class="modal fade" id="updateScorer" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Update Scorer</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="updateScorerForm">
+                                                    <div class="form-group hidden" aria-hidden="true">
+                                                        <label class="control-label">Scorer ID</label>
+                                                        <input id="scorer-id" type="text" class="form-control" name="id" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Organization</label>
+                                                        <select id="update-scorer-org-id" class="form-control orgs">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" onclick="postScorer()" class="btn btn-info">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                    <script>
+                                                        function postScorer() {
+                                                            $.ajax({
+                                                                    url: '/admin/update-scorer',
+                                                                    type: 'POST',
+                                                                    data: {
+                                                                        id: $('#scorer-id').val(),
+                                                                        org: $('#update-scorer-org-id').val()
+                                                                    },
+                                                                    success: function(result) {
+                                                                        console.log(result);
+                                                                        //$('#updateScorerForm').data('bootstrapValidator').resetForm();
+                                                                        $('#scorers-table').bootstrapTable('refresh');
+                                                                        $('#updateScorer').modal('toggle');
+                                                                    }
+                                                            });
+                                                        }
+                                                    </script>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -941,6 +1128,19 @@
                         $('.teachers option').remove();
                         $.each(result, function() {
                             $('.teachers').append($("<option/>", {
+                                value: this.id,
+                                text: this.name
+                            }));
+                        });
+                    }
+                });
+                $.ajax({
+                    dataType: 'json',
+                    url: '/api/orgs',
+                    success: function(result) {
+                        $('.orgs option').remove();
+                        $.each(result, function() {
+                            $('.orgs').append($("<option/>", {
                                 value: this.id,
                                 text: this.name
                             }));

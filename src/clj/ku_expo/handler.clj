@@ -67,6 +67,8 @@
   (GET "/teachers-summary" request (admin/get-teachers-summary request))
 
   (GET "/scorers-summary" request (admin/get-scorers-summary request))
+  (POST "/register-scorer" [& params] (auth/register-scorer params))
+  (POST "/update-scorer" [& params] (admin/update-scorer params))
   
   (GET "/schools-summary" request (admin/get-schools-summary request))
   (PUT "/school" request (admin/create-school request))
@@ -87,6 +89,7 @@
 (defroutes api-routes
   (GET "/valid-teamname" request (admin/teamname-valid? request))
   (GET "/competitions" request (admin/get-competitions))
+  (GET "/orgs" request (admin/get-orgs))
   (GET "/teachers" request (admin/get-teachers)))
 
 (defroutes app-routes
