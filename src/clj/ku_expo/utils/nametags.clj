@@ -57,18 +57,49 @@
      [:chunk {:style :bold} "Competitions: "] $comp_names
      [:spacer]]))
 
-(defn make-nametags
-  [division name]
-  (pdf/pdf
-    (for [group (partition 8 8 '() (student-template (sort-by :teacher_name (stringify (map collapse-rows (get-scheduled-students division))))))]
+(def listing-template
+(pdf/template
+[:paragraph
+     [:chunk {:style :bold} "Student: "] $name "\n"
+     [:chunk {:style :bold} "Sponsor: "] $teacher_name "\n"
+     [:chunk {:style :bold} "Division: "] $division "\n"
+     [:chunk {:style :bold} "Teams: "] $team_names "\n" 
+     [:chunk {:style :bold} "Competitions: "] $comp_names
+     [:spacer]]))
+
+(defn get-listings
+[division]
+(for [[teacher group] (sort-by #(key %) (group-by #(:teacher_name %) (stringify (map collapse-rows (get-scheduled-students division)))))]
+[[:table
+{:num-cols 2
+:width 100
+:widths [48 48]
+:border false
+:cell-border false}
+(for [student (listing-template (sort-by #(:name %) group))]
+[:cell {:align :left} student])]
+[:pagebreak]]))
+
+(defn make-listings
+[division name]
+(let [tables (get-listings division)] (pdf/pdf (conj tables (first tables)) name)))
+
+(defn get-tables
+[division]
+(for [group (partition-all 8 (student-template (sort-by :teacher_name (stringify (map collapse-rows (get-scheduled-students division))))))]
        [[:table 
-       {:align :left
-        :num-cols 2
-        :width 80
-        :widths [35 35]
+        {:num-cols 2
+        :width 100
+        :widths [48 48]
         :border false
         :cell-border false}
        (for [student group]
          [:cell {:align :left} student])]
-       [:pagebreak]])
-    name))
+       [:pagebreak]]))
+
+
+(defn make-nametags
+  [division name]
+(let [tables (get-tables division)]
+  (pdf/pdf (conj tables (first tables))
+    name)))

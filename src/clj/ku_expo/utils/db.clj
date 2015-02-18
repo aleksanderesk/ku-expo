@@ -7,9 +7,9 @@
 
 (def db {:classname "com.mysql.jdbc.Driver"
          :subprotocol "mysql"
-         :subname (str "//" (env :db-url) ":" (env :db-port) "/" (env :db-name))
-         :user (env :db-user)
-         :password (env :db-pass)})
+         :subname "//localhost:3306/kuexpo"
+	 :user "root"
+	 :password "2GVzC6FwBqwcPdg"})
 
 ;; TODO 
 ;; 1  Consider refactor of CRUD operations into four functions functions that

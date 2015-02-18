@@ -1,6 +1,6 @@
 SELECT K.id, K.name, K.division, T.name AS team_name, U.fullname AS teacher_name, C.name AS comp_name 
     FROM students K 
-    LEFT JOIN users U 
+    INNER JOIN users U 
         ON U.id = K.teacher_id 
     LEFT JOIN student_to_team ST 
         ON ST.student_id = K.id
@@ -10,5 +10,4 @@ SELECT K.id, K.name, K.division, T.name AS team_name, U.fullname AS teacher_name
         ON CT.team_id = T.id 
     LEFT JOIN competitions C 
         ON C.id = CT.comp_id 
-    WHERE K.division = :division
-    ORDER BY T.name, K.division, K.name;
+    WHERE K.division = :division;
