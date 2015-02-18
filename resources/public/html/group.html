@@ -205,11 +205,6 @@
                                                                     validators: {
                                                                         notEmpty: {
                                                                             message: 'Score must be between 0 and 100'
-                                                                        },
-                                                                        between: {
-                                                                            min: 0,
-                                                                            max: 100,
-                                                                            message: 'Score must be between 0 and 100'
                                                                         }
                                                                     }
                                                                 }
@@ -227,5 +222,15 @@
                 </div>
             </div>  
         </div>
+        <script>
+            $(document).ready(function() {
+                $('form input').keydown(function(event){
+                    if(event.keyCode == 13) {
+                        event.preventDefault();
+                        return false;
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
