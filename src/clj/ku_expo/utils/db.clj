@@ -74,6 +74,7 @@
 
 (defquery select-scorers-summary "sql/select-scorers-summary.sql")
 (defquery select-orgs "sql/select-orgs.sql")
+(defquery select-name-tags "sql/select-name-tags.sql")
 
 (defn user-exists?
   "Determine if a given user is already registered"
@@ -412,3 +413,7 @@
 (defn get-teams-summary
   []
   (sort-by :name (map collapse-rows (get-grouped-entries))))
+
+(defn get-name-tags
+  [div]
+  (select-name-tags db div))

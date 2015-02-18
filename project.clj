@@ -22,6 +22,7 @@
                  [formative "0.8.8"]
                  [prismatic/dommy "0.1.1"]
                  ;; Build dependencies
+                 [clj-pdf "2.0.0"]
                  [clj-time "0.8.0"]
                  [environ "1.0.0"]]
   :plugins [[lein-ring "0.8.13"]
