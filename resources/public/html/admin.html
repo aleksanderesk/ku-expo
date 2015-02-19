@@ -62,6 +62,9 @@
                 <li>
                     <a data-toggle="tab" href="#scorers">Scorers</a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#comps">Competitions</a>
+                </li>
             </ul>
             <div class="tab-content" id="content">
                 <!-- Overview Tab -->
@@ -1112,6 +1115,162 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Competitions -->
+                <div class="tab-pane fade" id="comps" role="tabpanel">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Competitions</h4>
+                                <p>From this page you will be able to monitor all the competitions and determine winners.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5>Competitions Overview</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="filter-bar" class="form-inline">
+                                        <div class="btn-toolbar">
+                                            <div class="btn-group">
+                                                <button id="elemFilterC" class="btn btn-default">Elementary</button>
+                                                <button id="middleFilterC" class="btn btn-default">Middle</button>
+                                                <button id="highFilterC" class="btn btn-default">High</button>
+                                                <button id="clearFilterC" class="btn btn-default">All</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div id="comp-bar" class="form-inline">
+                                        <div class="btn-toolbar">
+                                            <div class="btn-group">
+                                                <button id="1batcar" class="btn btn-default">Bat Car</button>
+                                                <button id="2chemcar" class="btn btn-default">Chem Car</button>
+                                                <button id="3egg" class="btn btn-default">Egg Drop</button>
+                                                <button id="4gliders" class="btn btn-default">Gliders</button>
+                                                <button id="5gravcar" class="btn btn-default">Grav Car</button>
+                                                <button id="6pad" class="btn btn-default">Lan Pad</button>
+                                                <button id="7pasta" class="btn btn-default">Pasta</button>
+                                                <button id="8sky" class="btn btn-default">Sky</button>
+                                                <button id="9sling" class="btn btn-default">Sling</button>
+                                                <button id="10treb" class="btn btn-default">Treb</button>
+                                                <button id="11rube" class="btn btn-default">Rube</button>
+                                                <button id="12rocket" class="btn btn-default">Rocket</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="comps-table" data-toggle="table" data-url="/admin/scores?comp_id=1" data-cache="false" data-search="true" data-toolbar="#filter-bar" data-show-columns="true" data-show-filter="true" data-show-refresh="true" data-search="true">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-visible="false">ID</th>
+                                                <th data-field="team_name" data-sortable="true">Name</th>
+                                                <th data-field="teacher_name" data-sortable="true">Teacher</th>
+                                                <th data-field="school_names" data-sortable="true">School</th>
+                                                <th data-field="student_names">Students</th>
+                                                <th data-field="division" data-visible="false" data-sortable="true">Division</th>
+                                                <th data-field="score" data-sortable="true">Score</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <script>
+                                        $(function() {
+                                            $('#elemFilterC').click(function() {
+                                                $('#comps-table').bootstrapTable('filterBy', {
+                                                    division: 'Elementary School'
+                                                });
+                                            });
+                                            $('#middleFilterC').click(function() {
+                                                $('#comps-table').bootstrapTable('filterBy', {
+                                                    division: 'Middle School'
+                                                });
+                                            });
+                                            $('#highFilterC').click(function() {
+                                                $('#comps-table').bootstrapTable('filterBy', {
+                                                    division: 'High School'
+                                                });
+                                            });
+                                            $('#clearFilterC').click(function() {
+                                                $('#comps-table').bootstrapTable('filterBy', {
+                                                });
+                                            });
+                                        });
+                                        $(function() {
+                                            $('#1batcar').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=1'}); 
+                                                console.log(1);
+                                            });
+                                            $('#2chemcar').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=2'}); 
+                                                console.log(2);
+                                            });
+                                            $('#3egg').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=3'}); 
+                                                console.log(3);
+                                            });
+                                            $('#4gliders').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=4'}); 
+                                                console.log(4);
+                                            });
+                                            $('#5gravcar').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=5'}); 
+                                                console.log(5);
+                                            });
+                                            $('#6pad').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=6'}); 
+                                                console.log(6);
+                                            });
+                                            $('#7pasta').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=7'}); 
+                                                console.log(7);
+                                            });
+                                            $('#8sky').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=8'}); 
+                                                console.log(8);
+                                            });
+                                            $('#9sling').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=9'}); 
+                                                console.log(9);
+                                            });
+                                            $('#10treb').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=10'}); 
+                                                console.log(10);
+                                            });
+                                            $('#11rube').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=11'}); 
+                                                console.log(11);
+                                            });
+                                            $('#12rocket').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=12'}); 
+                                                console.log(12);
+                                            });
+                                        });
+                                        function cellStyle(value, row, index) {
+                                            var classes = ['success', 'danger'];
+                                            if (value === null) {
+                                                return {classes: 'danger'};
+                                            } 
+                                            else {
+                                                return {classes: 'success'};
+                                            }
+                                        }
+                                    </script>
                                 </div>
                             </div>
                         </div>

@@ -7,9 +7,9 @@
 
 (def db {:classname "com.mysql.jdbc.Driver"
          :subprotocol "mysql"
-         :subname "//localhost:3306/kuexpo"
+         :subname "//localhost:3306/kuexpotest"
 	 :user "root"
-	 :password "2GVzC6FwBqwcPdg"})
+	 :password "password"})
 
 ;; TODO 
 ;; 1  Consider refactor of CRUD operations into four functions functions that
@@ -75,6 +75,7 @@
 (defquery select-scorers-summary "sql/select-scorers-summary.sql")
 (defquery select-orgs "sql/select-orgs.sql")
 (defquery select-name-tags "sql/select-name-tags.sql")
+(defquery select-score-report "sql/select-score-report.sql")
 
 (defn user-exists?
   "Determine if a given user is already registered"
@@ -363,6 +364,8 @@
   []
   (select-teachers-summary db))
 
+
+
 (defn collapse-scorers
   [rows]
   (let [collapsed-rows (reduce (fn [coll row] 
@@ -417,3 +420,36 @@
 (defn get-name-tags
   [div]
   (select-name-tags db div))
+
+(defn get-grouped-scores
+  [comp-id]
+  (->> comp-id
+      (select-score-report db)
+      (group-by #(:id %)) ; Fn notation for clarity? # always strikes me as a little too Haskell-terse
+      vals))
+
+(defn collapse-score-reports
+  [rows]
+  (let [collapsed-rows (reduce (fn [coll row] 
+            (let [{:keys [id team_name teacher_name school_name student_name division score]} row 
+                  {:keys [school_names student_names]} coll] 
+              (-> coll 
+                  (assoc :id id) 
+                  (assoc :team_name team_name)
+                  (assoc :teacher_name teacher_name)
+                  (assoc :division division)
+                  (assoc :school_names
+                        (conj school_names school_name)) 
+                  (assoc :student_names
+                         (conj student_names student_name))
+                  (assoc :score score))))
+          {:id nil :team_name nil :teacher_name nil :division nil :school_names #{} :student_names #{} :score nil}
+          rows)
+        {:keys [school_names student_names]} collapsed-rows]
+    (-> collapsed-rows
+        (assoc :school_names (clojure.string/join ", " school_names))
+        (assoc :student_names (clojure.string/join ", " student_names)))))
+
+(defn get-score-report
+  [comp_id]
+  (map collapse-score-reports (get-grouped-scores comp_id)))

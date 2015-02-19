@@ -23,6 +23,12 @@
   (json-response
     (db/get-scorers-summary)))
 
+(defn get-score-report
+  [params]
+  (let [{:keys [comp_id]} params]
+    (json-response
+      (db/get-score-report comp_id))))
+
 (defn update-scorer
   [params]
   (let [{:keys [id org]} params]

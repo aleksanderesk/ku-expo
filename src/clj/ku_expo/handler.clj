@@ -67,6 +67,7 @@
   (GET "/teachers-summary" request (admin/get-teachers-summary request))
 
   (GET "/scorers-summary" request (admin/get-scorers-summary request))
+  (GET "/scores" [& params] (admin/get-score-report params))
   (POST "/register-scorer" [& params] (auth/register-scorer params))
   (POST "/update-scorer" [& params] (admin/update-scorer params))
   
