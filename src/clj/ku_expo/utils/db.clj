@@ -28,6 +28,7 @@
 (defquery select-group-profile "sql/select-group-profile.sql")
 
 (defquery select-schools "sql/select-schools.sql")
+(defquery select-schools-by-teacher "sql/select-schools-by-teacher.sql")
 (defquery create-school! "sql/insert-school.sql")
 (defquery update-school! "sql/update-school.sql")
 (defquery delete-school! "sql/delete-school.sql")

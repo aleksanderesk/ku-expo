@@ -46,6 +46,11 @@
   (json-response
     (db/get-schools-summary)))
 
+(defn get-schools-by-teacher
+  [req]
+  (let [{:keys [teacher_id]} (:params req)]
+    (json-response (db/get-schools teacher_id))))
+
 (defn create-school
   [req]
   (let [{:keys [name teacher_id address]} (:params req)]
@@ -107,15 +112,15 @@
 
 (defn create-team
   [req]
-  (let [{:keys [name teacher_id division]} (:params req)]
-    (json-response (db/create-team teacher_id name division))))
+  (let [{:keys [name teacher_id division school]} (:params req)]
+    (json-response (db/create-team teacher_id name division school))))
 
 (defn update-team
   [req]
-  (let [{:keys [id teacher_id name division]} (:params req)
+  (let [{:keys [id teacher_id name division school]} (:params req)
         students (get-in req [:params :students])
         competitions (get-in req [:params :competitions])]
-    (json-response [(db/update-team name division id teacher_id)
+    (json-response [(db/update-team name division school id teacher_id)
                     (db/update-students-to-team id students)
                     (db/update-competitions-to-team id competitions)])))
 

@@ -625,6 +625,7 @@
                                                 <th data-field="name">Name</th>
                                                 <th data-field="teacher_id" data-visible="false">Teacher ID</th>
                                                 <th data-field="teacher_name">Teacher</th>
+                                                <th data-field="school_name">School</th>
                                                 <th data-field="student_names">Students</th>
                                                 <th data-field="comp_names">Competitions</th>
                                                 <th data-field="division">Division</th>
@@ -636,6 +637,31 @@
                                             $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
                                                 var students = row.student_ids.split(', ');
                                                 var competitions = row.comp_ids.split(', ');
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/admin/schools-teacher',
+                                                    data: {
+                                                        teacher_id: row.teacher_id
+                                                    },
+                                                    success: function(result) {
+                                                        $('#update-team-school option').remove();
+                                                        $.each(result, function() {
+                                                            console.log(result);
+                                                            if(this.name == row.school_name) {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
+                                                        });
+                                                    }
+                                                });
                                                 $.ajax({
                                                     dataType: 'json',
                                                     url: '/admin/students-teacher-division',
@@ -806,6 +832,11 @@
                                                             <option>High School</option>
                                                         </select>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">School</label>
+                                                        <select id="update-team-school" class="form-control">
+                                                        </select>
+                                                    </div>
                                                     <hr>
                                                     <div class="form-group">
                                                         <select id="update-team-students" multiple="multiple" style="display: none;">
@@ -865,6 +896,7 @@
                                                                         teacher_id: $('#update-team-teacher-id').val(),
                                                                         name: $('#update-team-name').val(),
                                                                         division: $('#update-team-division').val(),
+                                                                        school: $('#update-team-school').val(),
                                                                         students: $('#update-team-students').val(),
                                                                         competitions: $('#update-team-competitions').val()
                                                                     },

@@ -590,7 +590,6 @@
                                                     dataType: 'json',
                                                     url: '/teacher/schools',
                                                     success: function(result) {
-                                                        console.log(result);
                                                         $('#update-team-school option').remove();
                                                         $.each(result, function() {
                                                             if(this.name == row.school_name) {
