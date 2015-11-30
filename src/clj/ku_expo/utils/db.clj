@@ -427,7 +427,7 @@
   [comp-id]
   (->> comp-id
       (select-score-report db)
-      (group-by #(:id %)) ; Fn notation for clarity? # always strikes me as a little too Haskell-terse
+      (group-by #(:id %))
       vals))
 
 (defn collapse-score-reports

@@ -8,7 +8,7 @@ SELECT T.id, T.name AS team_name, K.name AS student_name, K.division, U.fullname
         ON ST.student_id = K.id
     INNER JOIN users U
         ON U.id = T.teacher_id
-    INNER JOIN schools S
-        ON S.teacher_id = U.id
+    LEFT JOIN schools S
+        ON S.id = T.school_id
     WHERE CT.comp_id = :comp_id
     ORDER BY CT.score DESC;
