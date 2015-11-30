@@ -126,19 +126,19 @@
   [req]
   (let [session (friend/identity req)
         user-id (get-in session [:authentications (session :current) :id])
-        {:keys [name division]} (:params req)]
+        {:keys [name division school]} (:params req)]
     (do 
-      (db/create-team user-id name division)
+      (db/create-team user-id name division school)
       (json-response {:result "success"}))))
 
 (defn update-team
   [req]
   (let [session (friend/identity req)
         user-id (get-in session [:authentications (session :current) :id])
-        {:keys [id name division]} (:params req)
+        {:keys [id name division school]} (:params req)
         students (get-in req [:params :students])
         competitions (get-in req [:params :competitions])]
-    (json-response {:result [(db/update-team name division id user-id)
+    (json-response {:result [(db/update-team name division school id user-id)
                              (db/update-students-to-team id students)
                              (db/update-competitions-to-team id competitions)]})))
 

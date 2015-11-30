@@ -69,8 +69,8 @@
                                 <h4>General Instructions</h4>
                                 <p>Welcome to the Expo Teacher Registration Application! Registration consists of four components: <span class="text-primary">School</span>, <span class="text-primary">Students</span>, <span class="text-primary">Teams</span>, and <span class="text-primary">Logistics</span>. Please register these components in order by selecting them from the tabs above.</p>
                                 <p>After having registered your components, you will be able to edit them at any time by returning to this application.</p>
-                                <p>Please note however, in order to prepare for competitions and scheduling, we will be <b>closing</b> registration two days before the first day of Expo. You will still be able to view your registered information from this application, but when registration is closed, you will not be able to edit it. So please finalize your students and teams by <b>February 17</b>. If changes occur in your teams after registration has closed, you may either email the Expo administrators with your changes, or you may bring your changes with you on the days of Expo you attend. Expo administrators will be there to make your changes during morning registration.</p>
-                                <p>If you have any questions concerning your registration or Expo in general, email <a href="mailto:tomasgreen@ku.edu">tomasgreen@ku.edu</a>.</p>
+                                <p>Please note however, in order to prepare for competitions and scheduling, we will be <b>closing</b> registration two days before the first day of Expo. You will still be able to view your registered information from this application, but when registration is closed, you will not be able to edit it. So please finalize your students and teams by <b>February 23</b>. If changes occur in your teams after registration has closed, you may either email the Expo administrators with your changes, or you may bring your changes with you on the days of Expo you attend. Expo administrators will be there to make your changes during morning registration.</p>
+                                <p>If you have any questions concerning your registration or Expo in general, email <a href="mailto:aubreyjeffries@ku.edu">aubreyjeffries@ku.edu</a>.</p>
                             </div>
                         </div>
                         <div class="row">
@@ -109,7 +109,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newSchool">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSchool">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add School
                                         </button>
@@ -127,7 +127,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#schools-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
@@ -138,7 +137,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New School Modal -->
                                 <div class="modal fade" id="newSchool" tabindex="-1" role="dialog" aria-hidden="true">
@@ -319,13 +317,14 @@
                                 <p>Register your students below by clicking the <span class="text-primary">'Add Student'</span> button in the Overview header below for each student. Once you have provided the student's full name and school division (i.e. Elementary, Middle, High School), they will appear as a row in the Overview table for you to verify.</p>
                                 <p>Clicking on the row will open a dialogue allowing you to edit the student's information or remove the record entirely if necessary.</p>
                                 <p><span class="text-warning">Note: </span>You may label the division of your student by the standard for your district. For example, if your district's Middle School is grades 7 through 9, and you register a ninth grade student, you may select <span class="text-info">'Middle School'</span> as that student's division.</p>
+                                <p><span class="text-warning">Note: </span>Even if a student you register is competing alone, you <b>must</b> register a team for them as well in the <span class="text-info">'Teams'</span> tab.</p>
                             </div>
                         </div>
                         <div class="row">
                              <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newStudent">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newStudent">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add Student
                                         </button>
@@ -343,7 +342,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#students-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
@@ -354,7 +352,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New Student Modal -->
                                 <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-hidden="true">
@@ -546,11 +543,29 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newTeam">
+                                        <button type="button" onclick="getSchools()" class="btn btn-primary" data-toggle="modal" data-target="#newTeam">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add Team
                                         </button>
                                     </div>
+                                    <script>
+                                        function getSchools() {
+                                            $.ajax({
+                                                dataType: 'json',
+                                                url: '/teacher/schools',
+                                                success: function(result) {
+                                                    console.log(result);
+                                                    $('#new-team-school option').remove();
+                                                    $.each(result, function() {
+                                                        $('#new-team-school').append($("<option/>", {
+                                                            value: this.id,
+                                                            text: this.name
+                                                        }));
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    </script>
                                     <h5>Overview</h5>
                                 </div>
                                 <!-- Table -->
@@ -561,17 +576,38 @@
                                                 <th data-field="id" data-visible="false">ID</th>
                                                 <th data-field="name">Team Name</th>
                                                 <th data-field="division">Division</th>
+                                                <th data-field="school_name">School</th>
                                                 <th data-field="student_names">Students</th>
                                                 <th data-field="comp_names">Competitions</th>
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
                                                 var students = row.student_ids.split(', ');
                                                 var competitions = row.comp_ids.split(', ');
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/teacher/schools',
+                                                    success: function(result) {
+                                                        $('#update-team-school option').remove();
+                                                        $.each(result, function() {
+                                                            if(this.name == row.school_name) {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
+                                                        });
+                                                    }
+                                                });
                                                 $.ajax({
                                                     dataType: 'json',
                                                     url: '/teacher/students-division',
@@ -626,7 +662,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New Team Modal -->
                                 <div class="modal fade" id="newTeam" tabindex="-1" role="dialog" aria-hidden="true">
@@ -653,6 +688,11 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label class=control-label">School</label>
+                                                        <select id="new-team-school" class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <button type="button" onclick="putTeam()" class="btn btn-primary">
                                                             <span class="glyphicon glyphicon-plus"></span>
                                                             Add
@@ -665,7 +705,8 @@
                                                                     type: 'PUT',
                                                                     data: {
                                                                         name: $('#new-team-name').val(),
-                                                                        division: $('#new-team-division').val()
+                                                                        division: $('#new-team-division').val(),
+                                                                        school: $('#new-team-school').val()
                                                                     },
                                                                     success: function(result) {
                                                                         console.log(result);
@@ -676,6 +717,7 @@
                                                             $('#newTeamForm').data('bootstrapValidator').resetForm();
                                                             $("#newTeamForm").trigger('reset');
                                                         }
+
                                                     </script>
                                                 </form>
                                                 <script type="text/javascript">
@@ -728,6 +770,11 @@
                                                             <option>Elementary School</option>
                                                             <option>Middle School</option>
                                                             <option>High School</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class=control-label">School</label>
+                                                        <select id="update-team-school" class="form-control">
                                                         </select>
                                                     </div>
                                                     <hr>
@@ -787,6 +834,7 @@
                                                                         id: $('#team-id').val(),
                                                                         name: $('#update-team-name').val(),
                                                                         division: $('#update-team-division').val(),
+                                                                        school: $('#update-team-school').val(),
                                                                         students: $('#update-team-students').val(),
                                                                         competitions: $('#update-team-competitions').val()
                                                                     },
@@ -837,7 +885,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newLogistics">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newLogistics">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add Logistics
                                         </button>
@@ -864,7 +912,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#logistics-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
@@ -893,7 +940,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New Logistics Modal -->
                                 <div class="modal fade" id="newLogistics" tabindex="-1" role="dialog" aria-hidden="true">

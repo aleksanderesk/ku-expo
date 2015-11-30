@@ -625,6 +625,7 @@
                                                 <th data-field="name">Name</th>
                                                 <th data-field="teacher_id" data-visible="false">Teacher ID</th>
                                                 <th data-field="teacher_name">Teacher</th>
+                                                <th data-field="school_name">School</th>
                                                 <th data-field="student_names">Students</th>
                                                 <th data-field="comp_names">Competitions</th>
                                                 <th data-field="division">Division</th>
@@ -636,6 +637,31 @@
                                             $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
                                                 var students = row.student_ids.split(', ');
                                                 var competitions = row.comp_ids.split(', ');
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/admin/schools-teacher',
+                                                    data: {
+                                                        teacher_id: row.teacher_id
+                                                    },
+                                                    success: function(result) {
+                                                        $('#update-team-school option').remove();
+                                                        $.each(result, function() {
+                                                            console.log(result);
+                                                            if(this.name == row.school_name) {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
+                                                        });
+                                                    }
+                                                });
                                                 $.ajax({
                                                     dataType: 'json',
                                                     url: '/admin/students-teacher-division',
@@ -806,6 +832,11 @@
                                                             <option>High School</option>
                                                         </select>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">School</label>
+                                                        <select id="update-team-school" class="form-control">
+                                                        </select>
+                                                    </div>
                                                     <hr>
                                                     <div class="form-group">
                                                         <select id="update-team-students" multiple="multiple" style="display: none;">
@@ -865,6 +896,7 @@
                                                                         teacher_id: $('#update-team-teacher-id').val(),
                                                                         name: $('#update-team-name').val(),
                                                                         division: $('#update-team-division').val(),
+                                                                        school: $('#update-team-school').val(),
                                                                         students: $('#update-team-students').val(),
                                                                         competitions: $('#update-team-competitions').val()
                                                                     },
@@ -1149,18 +1181,14 @@
                                     <div id="comp-bar" class="form-inline">
                                         <div class="btn-toolbar">
                                             <div class="btn-group">
-                                                <button id="1batcar" class="btn btn-default">Bat Car</button>
-                                                <button id="2chemcar" class="btn btn-default">Chem Car</button>
-                                                <button id="3egg" class="btn btn-default">Egg Drop</button>
-                                                <button id="4gliders" class="btn btn-default">Gliders</button>
-                                                <button id="5gravcar" class="btn btn-default">Grav Car</button>
-                                                <button id="6pad" class="btn btn-default">Lan Pad</button>
-                                                <button id="7pasta" class="btn btn-default">Pasta</button>
-                                                <button id="8sky" class="btn btn-default">Sky</button>
-                                                <button id="9sling" class="btn btn-default">Sling</button>
-                                                <button id="10treb" class="btn btn-default">Treb</button>
-                                                <button id="11rube" class="btn btn-default">Rube</button>
-                                                <button id="12rocket" class="btn btn-default">Rocket</button>
+                                                <button id="1skyscraper" class="btn btn-default">Skyscraper</button>
+                                                <button id="2glider" class="btn btn-default">Gliders</button>
+                                                <button id="3chemicalcar" class="btn btn-default">Chem Car</button>
+                                                <button id="4slingshot" class="btn btn-default">Slingshot</button>
+                                                <button id="5trebuchet" class="btn btn-default">Trebuchet</button>
+                                                <button id="6bolivianwaterchallenge" class="btn btn-default">Bolivian Water</button>
+                                                <button id="7miniaturecatapult" class="btn btn-default">Mini Catapult</button>
+                                                <button id="8pastabridge" class="btn btn-default">Pasta</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1200,65 +1228,37 @@
                                             });
                                         });
                                         $(function() {
-                                            $('#1batcar').click(function() {
+                                            $('#1skyscraper').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=1'}); 
-                                                console.log(1);
                                             });
-                                            $('#2chemcar').click(function() {
+                                            $('#2glider').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=2'}); 
-                                                console.log(2);
                                             });
-                                            $('#3egg').click(function() {
+                                            $('#3chemicalcar').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=3'}); 
-                                                console.log(3);
                                             });
-                                            $('#4gliders').click(function() {
+                                            $('#4slingshot').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=4'}); 
-                                                console.log(4);
                                             });
-                                            $('#5gravcar').click(function() {
+                                            $('#5trebuchet').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=5'}); 
-                                                console.log(5);
                                             });
-                                            $('#6pad').click(function() {
+                                            $('#6bolivianwaterchallenge').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=6'}); 
-                                                console.log(6);
                                             });
-                                            $('#7pasta').click(function() {
+                                            $('#7miniaturecatapult').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=7'}); 
-                                                console.log(7);
                                             });
-                                            $('#8sky').click(function() {
+                                            $('#8pastabridge').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=8'}); 
-                                                console.log(8);
-                                            });
-                                            $('#9sling').click(function() {
-                                                $('#comps-table').bootstrapTable('refresh', 
-                                                    {url: '/admin/scores?comp_id=9'}); 
-                                                console.log(9);
-                                            });
-                                            $('#10treb').click(function() {
-                                                $('#comps-table').bootstrapTable('refresh', 
-                                                    {url: '/admin/scores?comp_id=10'}); 
-                                                console.log(10);
-                                            });
-                                            $('#11rube').click(function() {
-                                                $('#comps-table').bootstrapTable('refresh', 
-                                                    {url: '/admin/scores?comp_id=11'}); 
-                                                console.log(11);
-                                            });
-                                            $('#12rocket').click(function() {
-                                                $('#comps-table').bootstrapTable('refresh', 
-                                                    {url: '/admin/scores?comp_id=12'}); 
-                                                console.log(12);
                                             });
                                         });
                                         function cellStyle(value, row, index) {

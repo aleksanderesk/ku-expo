@@ -58,8 +58,8 @@
      [:spacer]]))
 
 (def listing-template
-(pdf/template
-[:paragraph
+  (pdf/template
+    [:paragraph
      [:chunk {:style :bold} "Student: "] $name "\n"
      [:chunk {:style :bold} "Sponsor: "] $teacher_name "\n"
      [:chunk {:style :bold} "Division: "] $division "\n"
@@ -68,38 +68,38 @@
      [:spacer]]))
 
 (defn get-listings
-[division]
-(for [[teacher group] (sort-by #(key %) (group-by #(:teacher_name %) (stringify (map collapse-rows (get-scheduled-students division)))))]
-[[:table
-{:num-cols 2
-:width 100
-:widths [48 48]
-:border false
-:cell-border false}
-(for [student (listing-template (sort-by #(:name %) group))]
-[:cell {:align :left} student])]
-[:pagebreak]]))
+  [division]
+  (for [[teacher group] (sort-by #(key %) (group-by #(:teacher_name %) (stringify (map collapse-rows (get-scheduled-students division)))))]
+    [[:table
+      {:num-cols 2
+       :width 100
+       :widths [48 48]
+       :border false
+       :cell-border false}
+      (for [student (listing-template (sort-by #(:name %) group))]
+        [:cell {:align :left} student])]
+     [:pagebreak]]))
 
 (defn make-listings
-[division name]
-(let [tables (get-listings division)] (pdf/pdf (conj tables (first tables)) name)))
+  [division name]
+  (let [tables (get-listings division)] (pdf/pdf (conj tables (first tables)) name)))
 
 (defn get-tables
-[division]
-(for [group (partition-all 8 (student-template (sort-by :teacher_name (stringify (map collapse-rows (get-scheduled-students division))))))]
-       [[:table 
-        {:num-cols 2
-        :width 100
-        :widths [48 48]
-        :border false
-        :cell-border false}
-       (for [student group]
-         [:cell {:align :left} student])]
-       [:pagebreak]]))
+  [division]
+  (for [group (partition-all 8 (student-template (sort-by :teacher_name (stringify (map collapse-rows (get-scheduled-students division))))))]
+    [[:table 
+      {:num-cols 2
+       :width 100
+       :widths [48 48]
+       :border false
+       :cell-border false}
+      (for [student group]
+        [:cell {:align :left} student])]
+     [:pagebreak]]))
 
 
 (defn make-nametags
   [division name]
-(let [tables (get-tables division)]
-  (pdf/pdf (conj tables (first tables))
-    name)))
+  (let [tables (get-tables division)]
+    (pdf/pdf (conj tables (first tables))
+             name)))

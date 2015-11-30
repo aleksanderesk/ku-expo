@@ -72,6 +72,7 @@
   (POST "/update-scorer" [& params] (admin/update-scorer params))
   
   (GET "/schools-summary" request (admin/get-schools-summary request))
+  (GET "/schools-teacher" request (admin/get-schools-by-teacher request))
   (PUT "/school" request (admin/create-school request))
   (POST "/school" request (admin/update-school request))
   (DELETE "/school" request (admin/delete-school request))
