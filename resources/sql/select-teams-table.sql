@@ -1,5 +1,5 @@
-SELECT F.id, F.teacher_id, F.name, F.division, F.student_id, F.comp_id, U.name AS student_name, O.name AS comp_name FROM
-    (SELECT T.id, T.teacher_id, T.name, T.division, S.student_id, C.comp_id FROM teams T
+SELECT F.id, F.teacher_id, F.name, F.division, F.student_id, F.comp_id, F.school_id, H.name AS school_name, U.name AS student_name, O.name AS comp_name FROM
+    (SELECT T.id, T.teacher_id, T.name, T.division, T.school_id, S.student_id, C.comp_id FROM teams T
         LEFT JOIN student_to_team S 
             ON S.team_id = T.id
         LEFT JOIN competition_to_team C 
@@ -9,4 +9,6 @@ SELECT F.id, F.teacher_id, F.name, F.division, F.student_id, F.comp_id, U.name A
         ON U.id = F.student_id
     LEFT JOIN competitions O
         ON O.id = F.comp_id
+    LEFT JOIN schools H
+        ON H.id = F.school_id
     WHERE F.teacher_id = :user_id;

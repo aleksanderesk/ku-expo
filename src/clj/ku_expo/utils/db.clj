@@ -193,14 +193,16 @@
 (defn collapse-rows
   [rows]
   (let [collapsed-rows (reduce (fn [coll row] 
-            (let [{:keys [id name teacher_id teacher_name division student_id comp_id student_name comp_name]} row 
+            (let [{:keys [id name teacher_id teacher_name division school_id school_name student_id comp_id student_name comp_name]} row 
                   {:keys [student_ids comp_ids student_names comp_names]} coll] 
               (-> coll 
                   (assoc :id id) 
                   (assoc :name name)
                   (assoc :teacher_id teacher_id)
                   (assoc :teacher_name teacher_name) 
-                  (assoc :division division) 
+                  (assoc :division division)
+                  (assoc :school_id school_id)
+                  (assoc :school_name school_name)
                   (assoc :student_ids 
                          (conj student_ids student_id))
                   (assoc :comp_ids
@@ -209,7 +211,7 @@
                          (conj student_names student_name))
                   (assoc :comp_names
                          (conj comp_names comp_name)))))
-          {:id nil :name nil :teacher_id nil :teacher_name nil :division nil :student_ids #{} :comp_ids #{} :student_names #{} :comp_names #{}}
+          {:id nil :name nil :teacher_id nil :teacher_name nil :division nil :school_id nil :school_name nil :student_ids #{} :comp_ids #{} :student_names #{} :comp_names #{}}
           rows)
         {:keys [student_ids comp_ids student_names comp_names]} collapsed-rows]
     (-> collapsed-rows
@@ -223,12 +225,12 @@
   (map collapse-rows (get-grouped-entries user-id)))
 
 (defn create-team
-  [user-id name division]
-  (create-team! db user-id name division))
+  [user-id name division school-id]
+  (create-team! db user-id name division school-id))
 
 (defn update-team
-  [name division team-id user-id]
-  (update-team! db name division team-id user-id))
+  [name division school-id team-id user-id]
+  (update-team! db name division school-id team-id user-id))
 
 (defn delete-team
   ([team-id]

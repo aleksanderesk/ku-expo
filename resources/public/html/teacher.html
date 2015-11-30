@@ -109,7 +109,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newSchool">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSchool">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add School
                                         </button>
@@ -127,7 +127,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#schools-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
@@ -138,7 +137,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New School Modal -->
                                 <div class="modal fade" id="newSchool" tabindex="-1" role="dialog" aria-hidden="true">
@@ -325,7 +323,7 @@
                              <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newStudent">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newStudent">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add Student
                                         </button>
@@ -343,7 +341,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#students-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
@@ -354,7 +351,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New Student Modal -->
                                 <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-hidden="true">
@@ -546,11 +542,29 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newTeam">
+                                        <button type="button" onclick="getSchools()" class="btn btn-primary" data-toggle="modal" data-target="#newTeam">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add Team
                                         </button>
                                     </div>
+                                    <script>
+                                        function getSchools() {
+                                            $.ajax({
+                                                dataType: 'json',
+                                                url: '/teacher/schools',
+                                                success: function(result) {
+                                                    console.log(result);
+                                                    $('#new-team-school option').remove();
+                                                    $.each(result, function() {
+                                                        $('#new-team-school').append($("<option/>", {
+                                                            value: this.id,
+                                                            text: this.name
+                                                        }));
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    </script>
                                     <h5>Overview</h5>
                                 </div>
                                 <!-- Table -->
@@ -561,17 +575,39 @@
                                                 <th data-field="id" data-visible="false">ID</th>
                                                 <th data-field="name">Team Name</th>
                                                 <th data-field="division">Division</th>
+                                                <th data-field="school_name">School</th>
                                                 <th data-field="student_names">Students</th>
                                                 <th data-field="comp_names">Competitions</th>
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#teams-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
                                                 var students = row.student_ids.split(', ');
                                                 var competitions = row.comp_ids.split(', ');
+                                                $.ajax({
+                                                    dataType: 'json',
+                                                    url: '/teacher/schools',
+                                                    success: function(result) {
+                                                        console.log(result);
+                                                        $('#update-team-school option').remove();
+                                                        $.each(result, function() {
+                                                            if(this.name == row.school_name) {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    selected: "selected",
+                                                                    text: this.name
+                                                                }));
+                                                            } else {
+                                                                $('#update-team-school').append($("<option/>", {
+                                                                    value: this.id,
+                                                                    text: this.name
+                                                                }));
+                                                            }
+                                                        });
+                                                    }
+                                                });
                                                 $.ajax({
                                                     dataType: 'json',
                                                     url: '/teacher/students-division',
@@ -626,7 +662,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New Team Modal -->
                                 <div class="modal fade" id="newTeam" tabindex="-1" role="dialog" aria-hidden="true">
@@ -653,6 +688,11 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label class=control-label">School</label>
+                                                        <select id="new-team-school" class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <button type="button" onclick="putTeam()" class="btn btn-primary">
                                                             <span class="glyphicon glyphicon-plus"></span>
                                                             Add
@@ -665,7 +705,8 @@
                                                                     type: 'PUT',
                                                                     data: {
                                                                         name: $('#new-team-name').val(),
-                                                                        division: $('#new-team-division').val()
+                                                                        division: $('#new-team-division').val(),
+                                                                        school: $('#new-team-school').val()
                                                                     },
                                                                     success: function(result) {
                                                                         console.log(result);
@@ -676,6 +717,7 @@
                                                             $('#newTeamForm').data('bootstrapValidator').resetForm();
                                                             $("#newTeamForm").trigger('reset');
                                                         }
+
                                                     </script>
                                                 </form>
                                                 <script type="text/javascript">
@@ -728,6 +770,11 @@
                                                             <option>Elementary School</option>
                                                             <option>Middle School</option>
                                                             <option>High School</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class=control-label">School</label>
+                                                        <select id="update-team-school" class="form-control">
                                                         </select>
                                                     </div>
                                                     <hr>
@@ -787,6 +834,7 @@
                                                                         id: $('#team-id').val(),
                                                                         name: $('#update-team-name').val(),
                                                                         division: $('#update-team-division').val(),
+                                                                        school: $('#update-team-school').val(),
                                                                         students: $('#update-team-students').val(),
                                                                         competitions: $('#update-team-competitions').val()
                                                                     },
@@ -837,7 +885,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-primary disabled" data-toggle="modal" data-target="#newLogistics">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newLogistics">
                                             <span class="glyphicon glyphicon-plus"></span>
                                             Add Logistics
                                         </button>
@@ -864,7 +912,6 @@
                                             </tr>
                                         </thead>
                                     </table>
-                                    <!--
                                     <script>
                                         $(function() {
                                             $('#logistics-table').bootstrapTable().on('click-row.bs.table', function(e, row, $element) {
@@ -893,7 +940,6 @@
                                             });
                                         });
                                     </script>
-                                    -->
                                 </div>
                                 <!-- New Logistics Modal -->
                                 <div class="modal fade" id="newLogistics" tabindex="-1" role="dialog" aria-hidden="true">
