@@ -112,6 +112,12 @@
   (POST "/register" [& params] (auth/register-user params))
   (friend/logout (ANY "/logout" request (redirect "/"))))
 
+(defn wrap-headers
+  [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (assoc-in response [:headers "Cache-Control"] "no-cache, no-store, must-revalidate"))))
+
 (def app
   (-> (handler/site
         (friend/authenticate app-routes
@@ -119,7 +125,8 @@
                               :default-landing-uri "/"
                               :credential-fn #(creds/bcrypt-credential-fn db/get-user %)
                               :workflows [(workflows/interactive-form
-                                          :login-failure-handler (fn [req] (auth/wrong-login)))]}))
+                                            :login-failure-handler (fn [req] (auth/wrong-login)))]}))
+      (wrap-headers)
       (cors/wrap-cors identity))) ; TODO improve security here i.e. limit to site URL
 
 (defn -main [& args]
