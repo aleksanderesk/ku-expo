@@ -1189,6 +1189,7 @@
                                                 <button id="6downhillrace" class="btn btn-default">Downhill Race</button>
                                                 <button id="7roboticsoccer" class="btn btn-default">Robotic Soccer</button>
                                                 <button id="8pastabridge" class="btn btn-default">Pasta</button>
+                                                <button id="9gravitycar" class="btn btn-default">Gravity Car</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1259,6 +1260,10 @@
                                             $('#8pastabridge').click(function() {
                                                 $('#comps-table').bootstrapTable('refresh', 
                                                     {url: '/admin/scores?comp_id=8'}); 
+                                            });
+                                            $('#9gravitycar').click(function() {
+                                                $('#comps-table').bootstrapTable('refresh', 
+                                                    {url: '/admin/scores?comp_id=9'}); 
                                             });
                                         });
                                         function cellStyle(value, row, index) {
