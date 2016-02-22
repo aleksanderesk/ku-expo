@@ -108,8 +108,10 @@
   (GET "/" [] (resource-response "index.html" {:root "public/html"}))
   (GET "/login" [] (auth/login))
   (GET "/register" [] (auth/registration))
+  (GET "/new-password" [] (auth/new-password))
   (GET "/valid-username" [& params] (auth/username-valid? params))
   (POST "/register" [& params] (auth/register-user params))
+  (POST "/new-password" [& params] (auth/change-password params))
   (friend/logout (ANY "/logout" request (redirect "/"))))
 
 (defn wrap-headers

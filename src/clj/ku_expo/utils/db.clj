@@ -21,6 +21,7 @@
 
 (defquery select-user "sql/select-user.sql")
 (defquery create-user! "sql/insert-user.sql")
+(defquery update-user-password! "sql/update-user-password.sql")
 
 (defquery select-teacher-profile "sql/select-teacher-profile.sql")
 (defquery select-teachers "sql/select-teachers.sql")
@@ -94,8 +95,13 @@
 
 (defn create-user
   [fullname username phone password roles]
-  (let [password-hash (pass/encrypt password )]
+  (let [password-hash (pass/encrypt password)]
     (create-user! db fullname username phone password-hash roles)))
+
+(defn new-password
+  [username password]
+  (let [password-hash (pass/encrypt password)]
+    (update-user-password! db password-hash username)))
 
 (defn get-teacher-profile
   [user-id]

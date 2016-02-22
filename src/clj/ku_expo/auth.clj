@@ -17,6 +17,10 @@
   []
   (resource-response "register.html" {:root "public/html"}))
 
+(defn new-password
+  []
+  (resource-response "new-password.html" {:root "public/html"}))
+
 (defn username-valid?
   [params]
   (let [{:keys [username]} params]
@@ -32,6 +36,15 @@
     (do
       (db/create-user fullname username phone password "#{:ku-expo.handler/teacher}")
       (resource-response "registration-response.html" {:root "public/html"}))))
+
+(defn change-password
+  [params]
+  (let [{:keys [username password]} params]
+    (if (= (db/user-exists? username) true)
+      (do
+        (db/new-password username password)
+        (redirect "/login"))
+      (resource-response "wrong-username.html" {:root "public/html"}))))
 
 (defn register-scorer
   [params]
