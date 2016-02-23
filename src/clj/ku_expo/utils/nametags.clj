@@ -1,4 +1,5 @@
 (ns ku-expo.utils.nametags
+  (:use ring.util.io)
   (:require [ku-expo.utils.db :as db]
             [clj-pdf.core :as pdf]))
 
@@ -71,10 +72,7 @@
 
 (defn get-listings
   [division]
-  (for [[teacher group] 
-        (sort-by #(key %) 
-                 (group-by #(:teacher_name %) 
-                           (stringify (map collapse-rows (get-scheduled-students division)))))]
+  (for [[teacher group] (sort-by #(key %) (group-by #(:teacher_name %) (stringify (map collapse-rows (get-scheduled-students division)))))]
     [[:table
       {:num-cols 2
        :width 100
@@ -105,6 +103,13 @@
 
 (defn make-nametags
   [division name]
-  (let [tables (get-tables division)]
-    (pdf/pdf (conj tables (first tables))
-             name)))
+  (piped-input-stream
+    (fn [output-stream]
+      (let [tables (get-tables division)]
+        (pdf/pdf (conj tables (first tables))
+                 output-stream)))))
+
+(defn get-nametags
+  [division]
+  {:headers {"Content-Type" "application/pdf"}
+   :body (make-nametags division (str division "-nametags.pdf"))})

@@ -17,7 +17,8 @@
             [ku-expo.teachers.manage :as teacher]
             [ku-expo.groups.manage :as group]
             [ku-expo.admins.manage :as admin]
-            [ku-expo.utils.db :as db]))
+            [ku-expo.utils.db :as db]
+            [ku-expo.utils.nametags :refer [get-nametags]]))
 
 (derive ::admin ::user)
 (derive ::teacher ::user)
@@ -65,6 +66,7 @@
   (GET "/" request (admin/manage-admin request))
   (GET "/logistics-summary" request (admin/get-logistics-summary request))
   (GET "/teachers-summary" request (admin/get-teachers-summary request))
+  (GET "/nametags/:division" [division] (get-nametags division))
 
   (GET "/scorers-summary" request (admin/get-scorers-summary request))
   (GET "/scores" [& params] (admin/get-score-report params))
