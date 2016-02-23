@@ -67,9 +67,14 @@
      [:chunk {:style :bold} "Competitions: "] $comp_names
      [:spacer]]))
 
+; Wow, what evil have I wrought below
+
 (defn get-listings
   [division]
-  (for [[teacher group] (sort-by #(key %) (group-by #(:teacher_name %) (stringify (map collapse-rows (get-scheduled-students division)))))]
+  (for [[teacher group] 
+        (sort-by #(key %) 
+                 (group-by #(:teacher_name %) 
+                           (stringify (map collapse-rows (get-scheduled-students division)))))]
     [[:table
       {:num-cols 2
        :width 100
@@ -82,7 +87,8 @@
 
 (defn make-listings
   [division name]
-  (let [tables (get-listings division)] (pdf/pdf (conj tables (first tables)) name)))
+  (let [tables (get-listings division)] 
+    (pdf/pdf (conj tables (first tables)) name)))
 
 (defn get-tables
   [division]
@@ -96,7 +102,6 @@
       (for [student group]
         [:cell {:align :left} student])]
      [:pagebreak]]))
-
 
 (defn make-nametags
   [division name]
